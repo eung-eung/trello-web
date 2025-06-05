@@ -1,7 +1,7 @@
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import react from '@vitejs/plugin-react-swc'
+import react from 'eslint-plugin-react'
 
 
 export default [
@@ -31,6 +31,7 @@ export default [
       'no-console': 1,
       'no-lonely-if': 1,
       'no-unused-vars': 1,
+      'react/jsx-uses-vars':'error',
       'no-trailing-spaces': 1,
       'no-multi-spaces': 1,
       'no-multiple-empty-lines': 1,
