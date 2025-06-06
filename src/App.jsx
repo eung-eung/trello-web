@@ -1,13 +1,15 @@
 import Button from '@mui/material/Button'
 import { pink } from '@mui/material/colors'
 import HomeIcon from '@mui/icons-material/Home'
-
+import Typography from '@mui/material/Typography'
 function App() {
 
   return (
     <>
       <div>sadasdasdasd</div>
-      {/* <Chat /> */}
+      <Typography variant="body2" color="text.secondary">
+        aaasdadasdasd
+      </Typography>
       <HomeIcon />
       <HomeIcon color="primary" />
       <HomeIcon color="secondary" />
