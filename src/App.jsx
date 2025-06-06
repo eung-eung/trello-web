@@ -1,12 +1,12 @@
 import Button from '@mui/material/Button'
 import { pink } from '@mui/material/colors'
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from '@mui/icons-material/Home'
 
 function App() {
 
   return (
     <>
-      <div>vl</div>
+      <div>sadasdasdasd</div>
       {/* <Chat /> */}
       <HomeIcon />
       <HomeIcon color="primary" />
