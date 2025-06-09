@@ -3,6 +3,10 @@ import { createTheme } from '@mui/material/styles'
 
 // Create a theme instance.
 const theme = createTheme({
+  custom: {
+    appBarHeight: '48px',
+    boardBarHeight: '58px'
+  },
   colorSchemes: {
     light: {
       palette: {
