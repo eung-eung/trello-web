@@ -1,27 +1,22 @@
-import { useState } from 'react'
 import { useColorScheme } from '@mui/material/styles'
 
-import { pink } from '@mui/material/colors'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
-import { Box } from '@mui/material'
-// import useMediaQuery from '@mui/material/useMediaQuery'
 
-import HomeIcon from '@mui/icons-material/Home'
-import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LightModeIcon from '@mui/icons-material/LightMode'
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
+
 
 function ModeSelect() {
   const { mode, setMode } = useColorScheme()
 
   const handleChange = (event) => {
     const selectedMode = event.target.value
-    console.log(selectedMode)
     setMode(selectedMode)
   }
 
@@ -60,42 +55,38 @@ function ModeSelect() {
   )
 }
 
-function ModeToogle() {
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const { mode, setMode } = useColorScheme()
-
-  return <>
-    <Button
-      onClick={() => {
-        setMode(mode === 'light' ? 'dark' : 'light')
-      }}
-    >
-      {mode === 'light' ? 'Turn Dark' : 'Turn Light'}
-    </Button>
-  </>
-}
 function App() {
 
   return (
-    <>
-      <ModeSelect />
-      <hr />
-      <ModeToogle />
-      <Typography variant="body2" color="text.secondary">
-        aaasdadasdasd
-      </Typography>
-      <HomeIcon />
-      <HomeIcon color="primary" />
-      <HomeIcon color="secondary" />
-      <HomeIcon color="success" />
-      <HomeIcon color="action" />
-      <HomeIcon color="disabled" />
-      <HomeIcon sx={{ color: pink[500] }} />
-
-      <Button variant="text">Text</Button>
-      <Button variant="contained">Contained</Button>
-      <Button variant="outlined">Outlined</Button>
-    </>
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      <Box sx={{
+        backgroundColor: 'primary.light',
+        height: (theme) => theme.custom.appBarHeight,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <ModeSelect />
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.dark',
+        height: (theme) => theme.custom.boardBarHeight,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        Board bar
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.main',
+        height: (theme) => (`calc(100vh - ${theme.custom.boardBarHeight} - ${theme.custom.appBarHeight})`),
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        Content
+      </Box>
+    </Container>
   )
 }
 
