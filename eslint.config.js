@@ -3,7 +3,6 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import react from 'eslint-plugin-react'
 
-
 export default [
   { ignores: ['dist'] },
   {
@@ -18,7 +17,7 @@ export default [
       }
     },
     plugins: {
-      'react': react,
+      react: react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh
     },
@@ -37,9 +36,9 @@ export default [
       'no-multiple-empty-lines': 1,
       'space-before-blocks': ['error', 'always'],
       'object-curly-spacing': [1, 'always'],
-      'indent': ['warn', 2],
-      'semi': [1, 'never'],
-      'quotes': ['error', 'single'],
+      indent: ['warn', 2],
+      semi: [1, 'never'],
+      quotes: ['error', 'single'],
       'array-bracket-spacing': 1,
       'linebreak-style': 0,
       'no-unexpected-multiline': 'warn',
