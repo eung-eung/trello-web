@@ -18,7 +18,7 @@ export default [
       }
     },
     plugins: {
-      'react':react,
+      'react': react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh
     },
@@ -31,7 +31,7 @@ export default [
       'no-console': 1,
       'no-lonely-if': 1,
       'no-unused-vars': 1,
-      'react/jsx-uses-vars':'error',
+      'react/jsx-uses-vars': 'error',
       'no-trailing-spaces': 1,
       'no-multi-spaces': 1,
       'no-multiple-empty-lines': 1,
