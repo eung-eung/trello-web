@@ -1,4 +1,4 @@
-import { cyan, deepOrange, orange, teal } from '@mui/material/colors'
+import { brown } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
 // Create a theme instance.
@@ -10,16 +10,33 @@ const theme = createTheme({
   colorSchemes: {
     light: {
       palette: {
-        primary: teal,
-        secondary: deepOrange
+        primary: brown
+        // background: {
+        //   default: '#fafafa',
+        //   paper: '#ffd9ce'
+        // },
+        // text: {
+        //   primary: '#fff'
+        // }
       }
     },
     dark: {
       palette: {
-        primary: cyan,
-        secondary: orange
+        primary: {
+          main: '#fff'
+        },
+        background: {
+          default: '#1D232A',
+          paper: '#242933'
+        },
+        text: {
+          primary: '#E3E9F3',
+          secondary: '#9DA8B3'
+        },
+        divider: '#2F3542'
       }
     },
+
     cssVariables: {
       colorSchemeSelector: 'class'
     }
@@ -45,10 +62,11 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           textTransform: 'none',
-          fontWeight: 'bold'
-        }
+          fontWeight: 'bold',
+          color: theme.palette.primary
+        })
       }
     },
     MuiInputLabel: {
@@ -73,7 +91,16 @@ const theme = createTheme({
             }
           },
           '& fieldset': {
-            borderWidth: '1px !important'
+            borderWidth: '0.5px !important'
+          },
+          '&:hover fieldset': {
+            borderWidth: '2px !important'
+          },
+          '&.Mui-focused fieldset': {
+            borderWidth: '2px !important'
+          },
+          '& .MuiSvgIcon-root': {
+            color: theme.palette.primary.main
           }
         })
       }

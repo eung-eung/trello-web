@@ -35,7 +35,8 @@ function BoardBar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderTop: '1px solid #1abc9c',
+        borderTop: '1px solid',
+        borderColor: 'primary.light',
         paddingX: 2
       }}
     >
