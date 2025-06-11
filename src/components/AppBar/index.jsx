@@ -3,6 +3,7 @@ import Workspaces from './Menu/Workspaces'
 import Recent from './Menu/Recent'
 import Starred from './Menu/Starred'
 import Templates from './Menu/Templates'
+import Profiles from './Menu/Profiles'
 import TrelloIcon from '~/assets/trello.svg?react'
 
 import Box from '@mui/material/Box'
@@ -11,24 +12,24 @@ import SvgIcon from '@mui/material/SvgIcon'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Badge from '@mui/material/Badge'
-
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import AppsIcon from '@mui/icons-material/Apps'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
+
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import Profiles from './Menu/Profiles'
 
 function AppBar() {
   return (
     <Box
-      px={2}
       sx={{
         height: (theme) => theme.custom.appBarHeight,
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        overflowX: 'auto'
+        overflowX: 'auto',
+        paddingX: 2
       }}
     >
       <Box
@@ -68,7 +69,9 @@ function AppBar() {
             <Recent />
             <Starred />
             <Templates />
-            <Button variant="outlined">Create</Button>
+            <Button variant="outlined" startIcon={<LibraryAddIcon />}>
+              Create
+            </Button>
           </Box>
         </Box>
       </Box>
