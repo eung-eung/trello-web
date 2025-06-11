@@ -25,6 +25,24 @@ const theme = createTheme({
     }
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        'html, body': {
+          '*::-webkit-scrollbar': {
+            width: '6px',
+            height: '6px'
+          },
+          '*::-webkit-scrollbar-thumb': {
+            backgroundColor: '#bdc3c7',
+            borderRadius: '4px'
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#00b894',
+            borderRadius: '4px'
+          }
+        }
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
