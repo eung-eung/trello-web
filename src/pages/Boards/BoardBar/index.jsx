@@ -13,13 +13,14 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 const CHIP_STYLES = {
-  color: 'primary.main',
-  backgroundColor: '#fff',
+  color: (theme) =>
+    theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main,
   border: 'none',
   paddingX: '5px',
   borderRadius: '4px',
   '& .MuiSvgIcon-root': {
-    color: 'primary.main'
+    color: (theme) =>
+      theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
   },
   '&:hover': {
     backgroundColor: 'primary.50'
@@ -46,7 +47,7 @@ function BoardBar() {
           icon={<DashboardIcon />}
           label="Trello Mern Stack"
           clickable
-          variant="filled"
+          variant="outlined"
         />
 
         <Chip
@@ -54,7 +55,7 @@ function BoardBar() {
           icon={<VpnLockIcon />}
           label="Public/Private Workspace"
           clickable
-          variant="filled"
+          variant="outlined"
         />
 
         <Chip
@@ -62,7 +63,7 @@ function BoardBar() {
           icon={<AddToDriveOutlinedIcon />}
           label="Add to drive"
           clickable
-          variant="filled"
+          variant="outlined"
         />
 
         <Chip
@@ -70,7 +71,7 @@ function BoardBar() {
           icon={<BoltIcon />}
           label="Automation"
           clickable
-          variant="filled"
+          variant="outlined"
         />
 
         <Chip
@@ -78,7 +79,7 @@ function BoardBar() {
           icon={<FilterListIcon />}
           label="Filter"
           clickable
-          variant="filled"
+          variant="outlined"
         />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
@@ -91,7 +92,8 @@ function BoardBar() {
             '& .MuiAvatar-root': {
               width: 34,
               height: 34,
-              fontSize: 16
+              fontSize: 16,
+              '&:first-of-type': { bgcolor: '#a4b0be' }
             }
           }}
         >

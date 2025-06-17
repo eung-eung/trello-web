@@ -34,7 +34,10 @@ function AppBar() {
         alignItems: 'center',
         justifyContent: 'space-between',
         overflowX: 'auto',
-        paddingX: 2
+        paddingX: 2,
+        '&::-webkit-scrollbar-track': {
+          m: 2
+        }
       }}
     >
       <Box
@@ -44,7 +47,7 @@ function AppBar() {
           gap: 2
         }}
       >
-        <AppsIcon sx={{ color: 'primary.main' }} />
+        <AppsIcon />
         <Box
           sx={{
             display: 'flex',
@@ -52,18 +55,12 @@ function AppBar() {
             gap: 0.5
           }}
         >
-          <SvgIcon
-            component={TrelloIcon}
-            inheritViewBox
-            fontSize="small"
-            sx={{ color: 'primary.main' }}
-          />
+          <SvgIcon component={TrelloIcon} inheritViewBox fontSize="small" />
           <Typography
             variant="span"
             sx={{
               fontWeight: 600,
-              fontSize: '1.2rem',
-              color: 'primary.main'
+              fontSize: '1.2rem'
             }}
           >
             Trello
