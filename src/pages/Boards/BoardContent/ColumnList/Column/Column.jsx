@@ -19,8 +19,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 import { useState } from 'react'
 import CardList from './CardList/CardList'
+import { mapOrder } from '~/utils/sorts'
 
-function Column() {
+function Column({ column }) {
+  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -66,7 +68,7 @@ function Column() {
                 : theme.palette.primary.main
           }}
         >
-          Column Title
+          {column?.title}
         </Typography>
         {/* options  */}
         <Box>
@@ -132,8 +134,9 @@ function Column() {
           </Menu>
         </Box>
       </Box>
+
       {/* Card list */}
-      <CardList />
+      <CardList cards={orderedCards} />
 
       {/*---- Footer ----*/}
       <Box
