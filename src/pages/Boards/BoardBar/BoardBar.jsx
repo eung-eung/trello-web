@@ -12,6 +12,8 @@ import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
+import { capitalizeFirstLetter } from '~/utils/formaters'
+
 const CHIP_STYLES = {
   color: (theme) =>
     theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main,
@@ -27,7 +29,7 @@ const CHIP_STYLES = {
   }
 }
 
-function BoardBar() {
+function BoardBar({ boardBar }) {
   return (
     <Box
       sx={{
@@ -45,7 +47,7 @@ function BoardBar() {
         <Chip
           sx={CHIP_STYLES}
           icon={<DashboardIcon />}
-          label="Trello Mern Stack"
+          label={boardBar?.title}
           clickable
           variant="outlined"
         />
@@ -53,7 +55,7 @@ function BoardBar() {
         <Chip
           sx={CHIP_STYLES}
           icon={<VpnLockIcon />}
-          label="Public/Private Workspace"
+          label={capitalizeFirstLetter(boardBar.type)}
           clickable
           variant="outlined"
         />

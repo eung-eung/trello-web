@@ -9,27 +9,12 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import ChatBubbleOutlinedIcon from '@mui/icons-material/ChatBubbleOutlined'
 import GroupIcon from '@mui/icons-material/Group'
 
-function Card({ temporaryHideMedia }) {
-  if (temporaryHideMedia) {
-    return (
-      <MuiCard
-        sx={{
-          cursor: 'pointer',
-          boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-          overflow: 'unset'
-        }}
-      >
-        <CardContent
-          sx={{
-            p: 1.5,
-            '&:last-child': {
-              p: 1.5
-            }
-          }}
-        >
-          <Typography>This is really suck</Typography>
-        </CardContent>
-      </MuiCard>
+function Card({ card }) {
+  const shoudldShowCardActions = () => {
+    return !!(
+      card?.memberIds?.length ||
+      card?.comments?.length ||
+      card?.attachments?.length
     )
   }
 
@@ -41,12 +26,9 @@ function Card({ temporaryHideMedia }) {
         overflow: 'unset'
       }}
     >
-      <CardMedia
-        component="img"
-        alt="green iguana"
-        height="140"
-        image="https://photo.znews.vn/w660/Uploaded/mdf_eioxrd/2021_07_06/2.jpg"
-      />
+      {card?.cover && (
+        <CardMedia component="img" height="140" image={card?.cover} />
+      )}
       <CardContent
         sx={{
           p: 1.5,
@@ -55,19 +37,29 @@ function Card({ temporaryHideMedia }) {
           }
         }}
       >
-        <Typography>This is really suck</Typography>
+        <Typography>{card?.title}</Typography>
       </CardContent>
-      <CardActions sx={{ padding: '0 4px 8px 4px' }}>
-        <Button size="small" startIcon={<GroupIcon />}>
-          20
-        </Button>
-        <Button size="small" startIcon={<ChatBubbleOutlinedIcon />}>
-          15
-        </Button>
-        <Button size="small" startIcon={<AttachmentIcon />}>
-          5
-        </Button>
-      </CardActions>
+      {shoudldShowCardActions() && (
+        <CardActions sx={{ padding: '0 4px 8px 4px' }}>
+          {!!card?.memberIds?.length && (
+            <Button size="small" startIcon={<GroupIcon />}>
+              {card.memberIds.length}
+            </Button>
+          )}
+
+          {!!card?.comments?.length && (
+            <Button size="small" startIcon={<ChatBubbleOutlinedIcon />}>
+              {card.comments.length}
+            </Button>
+          )}
+
+          {!!card?.attachments?.length && (
+            <Button size="small" startIcon={<AttachmentIcon />}>
+              {card?.attachments.length}
+            </Button>
+          )}
+        </CardActions>
+      )}
     </MuiCard>
   )
 }
