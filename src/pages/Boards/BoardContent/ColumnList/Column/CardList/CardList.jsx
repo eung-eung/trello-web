@@ -15,7 +15,7 @@ function CardList({ cards }) {
         maxHeight: (theme) => `calc(
              ${theme.custom.boardContentHeight} -
              ${theme.custom.columnHeaderHeight} -
-             ${theme.custom.columnfooterHeight} -
+             ${theme.custom.columnFooterHeight} -
              ${theme.spacing(5)}
             )`,
         '&::-webkit-scrollbar-thumb': {
