@@ -8,8 +8,25 @@ import Typography from '@mui/material/Typography'
 import AttachmentIcon from '@mui/icons-material/Attachment'
 import ChatBubbleOutlinedIcon from '@mui/icons-material/ChatBubbleOutlined'
 import GroupIcon from '@mui/icons-material/Group'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function Card({ card }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: card._id, data: { ...card } })
+
+  const dndKitCardStyles = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : undefined
+  }
+
   const shoudldShowCardActions = () => {
     return !!(
       card?.memberIds?.length ||
@@ -20,6 +37,10 @@ function Card({ card }) {
 
   return (
     <MuiCard
+      ref={setNodeRef}
+      style={dndKitCardStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         cursor: 'pointer',
         boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
