@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import {
+  defaultDropAnimationSideEffects,
   DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   useSensor,
@@ -9,10 +11,23 @@ import {
 import { arrayMove } from '@dnd-kit/sortable'
 import Box from '@mui/material/Box'
 import { mapOrder } from '~/utils/sorts'
+
 import ColumnList from './ColumnList/ColumnList'
+import Column from './ColumnList/Column/Column'
+import Card from './ColumnList/Column/CardList/Card/Card'
+
+const ACTIVE_DRAG_ITEM_TYPE = {
+  COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
+  CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
+}
 
 function BoardContent({ board }) {
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
+
+  //cùng 1 thời điểm chỉ có 1 item đang kéo thả (column hoặc card)
+  const [activeDragItemId, setActiveDragItemId] = useState(null)
+  const [activeDragItemType, setActiveDragItemType] = useState(null)
+  const [activeDragItemData, setActiveDragItemData] = useState(null)
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -40,6 +55,18 @@ function BoardContent({ board }) {
     setOrderedColumnsState(orderedColumns)
   }, [board])
 
+  const handleDragStart = (event) => {
+    const { active } = event
+
+    setActiveDragItemId(active?.id)
+    setActiveDragItemType(
+      active?.data?.current?.columnId
+        ? ACTIVE_DRAG_ITEM_TYPE.CARD
+        : ACTIVE_DRAG_ITEM_TYPE.COLUMN
+    )
+    setActiveDragItemData(active?.data?.current)
+  }
+
   const handleDragEnd = (event) => {
     const { active, over } = event
 
@@ -56,11 +83,14 @@ function BoardContent({ board }) {
         oldIndex,
         newIndex
       )
+
       //xử lí api sau
       //const dndOrderedColumnIds = dndOrderedColumns.map((c) => c._id)
-
       setOrderedColumnsState(dndOrderedColumns)
     }
+    setActiveDragItemId(null)
+    setActiveDragItemType(null)
+    setActiveDragItemData(null)
     // if (event.over) {
     //   setOrderedColumnsState((prevColumns) => {
     //     const oldIndex = prevColumns.findIndex((c) => c._id === active.id)
@@ -74,8 +104,23 @@ function BoardContent({ board }) {
     //   })
     // }
   }
+
+  const customDropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: 0.5
+        }
+      }
+    })
+  }
+
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      sensors={sensors}
+    >
       <Box
         sx={{
           backgroundColor: 'primary.main',
@@ -85,6 +130,16 @@ function BoardContent({ board }) {
         }}
       >
         <ColumnList columns={orderedColumnsState} />
+
+        <DragOverlay dropAnimation={customDropAnimation}>
+          {!activeDragItemType && null}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+            <Column column={activeDragItemData} />
+          )}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
+            <Card card={activeDragItemData} />
+          )}
+        </DragOverlay>
       </Box>
     </DndContext>
   )
