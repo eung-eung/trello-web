@@ -11,7 +11,7 @@ import {
 import { arrayMove } from '@dnd-kit/sortable'
 import Box from '@mui/material/Box'
 import { mapOrder } from '~/utils/sorts'
-//asdsadd
+
 import ColumnList from './ColumnList/ColumnList'
 import Column from './ColumnList/Column/Column'
 import Card from './ColumnList/Column/CardList/Card/Card'
