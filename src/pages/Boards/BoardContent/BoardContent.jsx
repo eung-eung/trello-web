@@ -15,7 +15,6 @@ import { mapOrder } from '~/utils/sorts'
 import ColumnList from './ColumnList/ColumnList'
 import Column from './ColumnList/Column/Column'
 import Card from './ColumnList/Column/CardList/Card/Card'
-import { order } from '@mui/system'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -70,7 +69,6 @@ function BoardContent({ board }) {
 
   const handleDragEnd = (event) => {
     const { active, over } = event
-    console.log(over)
 
     // kiểm tra nếu không tồn tại over (kéo linh tinh ra ngoài) => return tránh lỗi
     if (!over) return
@@ -107,47 +105,6 @@ function BoardContent({ board }) {
     // }
   }
 
-  const getColumnIndex = (columnId) => {
-    return Object.keys(orderedColumnsState).find(
-      (key) => orderedColumnsState[key]._id === columnId
-    )
-  }
-
-  const handleDragOver = (event) => {
-    const { active, over } = event
-    console.log(active, over)
-
-    //stop if it is not dragging a card
-    if (!active?.data?.current?.columnId) {
-      return
-    }
-    //stop if it is same place after drag and drop
-    if (active.id === over.id) return
-
-    const activeColumnIndex = getColumnIndex(active?.data?.current?.columnId)
-    const overColumnIndex = getColumnIndex(over?.data?.current?.columnId)
-    console.log('active: ', activeColumnIndex)
-    console.log('over: ', overColumnIndex)
-
-    // index after drop card
-    const overCardIndex = orderedColumnsState[overColumnIndex].cards.findIndex(
-      (c) => c._id === over.id
-    )
-
-    //index after drag/pickup card
-    const activeCardIndex = orderedColumnsState[
-      activeColumnIndex
-    ].cards.findIndex((c) => c._id === active.id)
-    console.log('drop index: ', overCardIndex)
-    console.log('pick up index: ', activeCardIndex)
-
-    setOrderedColumnsState((prevColumnsState) => {
-      const cloneColumn = [...prevColumnsState]
-
-      return cloneColumn
-    })
-  }
-
   const customDropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
       styles: {
@@ -162,7 +119,6 @@ function BoardContent({ board }) {
     <DndContext
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
       sensors={sensors}
     >
       <Box
