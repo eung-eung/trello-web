@@ -70,7 +70,6 @@ function BoardContent({ board }) {
 
   const handleDragEnd = (event) => {
     const { active, over } = event
-    console.log(over)
 
     // kiểm tra nếu không tồn tại over (kéo linh tinh ra ngoài) => return tránh lỗi
     if (!over) return
@@ -87,24 +86,42 @@ function BoardContent({ board }) {
       )
 
       //xử lí api sau
-      //const dndOrderedColumnIds = dndOrderedColumns.map((c) => c._id)
       setOrderedColumnsState(dndOrderedColumns)
+    }
+
+    //drag/drop card in same column
+    if (active?.data?.current?.columnId) {
+      const activeColumnIndex = getColumnIndex(active?.data?.current?.columnId)
+      const overColumnIndex = getColumnIndex(over?.data?.current?.columnId)
+
+      if (activeColumnIndex === overColumnIndex) {
+        // index over card
+        const overCardIndex = orderedColumnsState[
+          overColumnIndex
+        ].cards.findIndex((c) => c._id === over.id)
+
+        //index active card
+        const activeCardIndex = orderedColumnsState[
+          activeColumnIndex
+        ].cards.findIndex((c) => c._id === active.id)
+
+        const clonePrev = [...orderedColumnsState]
+        const newCards = arrayMove(
+          clonePrev[overColumnIndex].cards,
+          activeCardIndex,
+          overCardIndex
+        )
+
+        console.log('newCards: ', newCards)
+
+        clonePrev[overColumnIndex].cardOrderIds = newCards.map((c) => c._id)
+        clonePrev[overColumnIndex].cards = newCards
+        setOrderedColumnsState(clonePrev)
+      }
     }
     setActiveDragItemId(null)
     setActiveDragItemType(null)
     setActiveDragItemData(null)
-    // if (event.over) {
-    //   setOrderedColumnsState((prevColumns) => {
-    //     const oldIndex = prevColumns.findIndex((c) => c._id === active.id)
-    //     const newIndex = prevColumns.findIndex((c) => c._id === over.id)
-    //     const clonePrevColumns = [...prevColumns]
-    //     // clonePrevColumns.splice(oldIndex, 1)
-    //     // clonePrevColumns.splice(newIndex, 0, active.data.current)
-
-    //     arrayMove(prevColumns, oldIndex, newIndex)
-    //     return clonePrevColumns
-    //   })
-    // }
   }
 
   const getColumnIndex = (columnId) => {
@@ -115,10 +132,14 @@ function BoardContent({ board }) {
 
   const handleDragOver = (event) => {
     const { active, over } = event
-    console.log(active, over)
+    console.log('active', active)
+
+    console.log('over', over)
 
     //stop if it is not dragging a card
-    if (!active?.data?.current?.columnId) {
+    if (!active?.data?.current?.columnId || !over) {
+      console.log('vào đây')
+
       return
     }
     //stop if it is same place after drag and drop
@@ -126,26 +147,39 @@ function BoardContent({ board }) {
 
     const activeColumnIndex = getColumnIndex(active?.data?.current?.columnId)
     const overColumnIndex = getColumnIndex(over?.data?.current?.columnId)
-    console.log('active: ', activeColumnIndex)
-    console.log('over: ', overColumnIndex)
 
-    // index after drop card
-    const overCardIndex = orderedColumnsState[overColumnIndex].cards.findIndex(
-      (c) => c._id === over.id
-    )
+    //drop and drag card in the same column
+    if (activeColumnIndex === overColumnIndex) {
+      let newIndex
+      // index over card
+      const overCardIndex = orderedColumnsState[
+        overColumnIndex
+      ].cards.findIndex((c) => c._id === over.id)
 
-    //index after drag/pickup card
-    const activeCardIndex = orderedColumnsState[
-      activeColumnIndex
-    ].cards.findIndex((c) => c._id === active.id)
-    console.log('drop index: ', overCardIndex)
-    console.log('pick up index: ', activeCardIndex)
+      //index active card
+      const activeCardIndex = orderedColumnsState[
+        activeColumnIndex
+      ].cards.findIndex((c) => c._id === active.id)
 
-    setOrderedColumnsState((prevColumnsState) => {
-      const cloneColumn = [...prevColumnsState]
+      console.log('overCardIndex', overCardIndex)
+      console.log('activeCardIndex', activeCardIndex)
 
-      return cloneColumn
-    })
+      // setOrderedColumnsState((prev) => {
+      //   const clonePrev = [...prev]
+      //   const newCards = arrayMove(
+      //     clonePrev[overColumnIndex].cards,
+      //     activeCardIndex,
+      //     overCardIndex
+      //   )
+      //   clonePrev[overColumnIndex].cardOrderIds = newCards.map((c) => c._id)
+      //   console.log(newCards)
+
+      //   return [...clonePrev, (clonePrev[overColumnIndex].cards = newCards)]
+      // })
+    }
+
+    // console.log('drop index: ', overCardIndex)
+    // console.log('pick up index: ', activeCardIndex)
   }
 
   const customDropAnimation = {
