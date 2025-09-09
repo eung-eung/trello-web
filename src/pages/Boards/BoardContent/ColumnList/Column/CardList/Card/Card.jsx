@@ -11,7 +11,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-function Card({ card }) {
+function Card({ card, isOverlay }) {
   const {
     attributes,
     listeners,
@@ -44,7 +44,9 @@ function Card({ card }) {
       sx={{
         cursor: 'pointer',
         boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-        overflow: 'unset'
+        overflow: 'unset',
+        transform: isOverlay ? 'rotate(5deg)' : 'none',
+        opacity: isOverlay ? 0.8 : 1
       }}
     >
       {card?.cover && (

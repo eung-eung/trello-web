@@ -8,7 +8,7 @@ import {
   horizontalListSortingStrategy
 } from '@dnd-kit/sortable'
 
-function ColumnList({ columns }) {
+function ColumnList({ columns, activeColumnId }) {
   return (
     <SortableContext
       items={columns.map((c) => c._id)}
@@ -28,7 +28,11 @@ function ColumnList({ columns }) {
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column
+            key={column._id}
+            column={column}
+            isActiveColumn={activeColumnId === column._id}
+          />
         ))}
 
         {/* Add new column Box */}

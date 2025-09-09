@@ -23,7 +23,7 @@ import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-function Column({ column }) {
+function Column({ column, isActiveColumn }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -64,7 +64,13 @@ function Column({ column }) {
           borderRadius: '6px',
           height: 'fit-content',
           maxHeight: (theme) =>
-            `calc(${theme.custom.boardContentHeight} - ${theme.spacing(5)})`
+            `calc(${theme.custom.boardContentHeight} - ${theme.spacing(5)})`,
+          border: (theme) =>
+            isActiveColumn
+              ? theme.palette.mode === 'dark'
+                ? '#3B82F6 2px dashed'
+                : ' #00897B 2px dashed'
+              : 'none'
         }}
       >
         {/*---- Header ----*/}
