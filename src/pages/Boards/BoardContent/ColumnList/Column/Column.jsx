@@ -65,11 +65,16 @@ function Column({ column, isActiveColumn }) {
           height: 'fit-content',
           maxHeight: (theme) =>
             `calc(${theme.custom.boardContentHeight} - ${theme.spacing(5)})`,
-          border: (theme) =>
+          border: '2px solid transparent',
+          boxShadow: isActiveColumn
+            ? '0 0 0 3px rgba(0, 121, 191, 0.3)'
+            : '0 1px 3px rgba(0,0,0,0.1)',
+          transition: '0.2s ease',
+          borderColor: (theme) =>
             isActiveColumn
               ? theme.palette.mode === 'dark'
-                ? '#3B82F6 2px dashed'
-                : ' #00897B 2px dashed'
+                ? '#3B82F6'
+                : 'rgba(45, 83, 255, 1)'
               : 'none'
         }}
       >
