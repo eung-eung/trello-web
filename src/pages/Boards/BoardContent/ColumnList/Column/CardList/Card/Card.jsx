@@ -46,7 +46,9 @@ function Card({ card, isOverlay }) {
         boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
         overflow: 'unset',
         transform: isOverlay ? 'rotate(5deg)' : 'none',
-        opacity: isOverlay ? 0.8 : 1
+        opacity: isOverlay ? 0.8 : 1,
+        pointerEvents: card.FE_Placeholder ? 'none' : 'unset',
+        position: card.FE_PlaceholderCard ? 'fixed' : 'unset'
       }}
     >
       {card?.cover && (

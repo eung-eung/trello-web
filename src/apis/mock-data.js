@@ -187,6 +187,12 @@ export const mockData = {
             attachments: []
           }
         ]
+      },
+      {
+        _id: 'column-id-04',
+        boardId: 'board-id-01',
+        title: 'Empty column 04',
+        cards: []
       }
     ]
   }
