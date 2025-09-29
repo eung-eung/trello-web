@@ -44,13 +44,15 @@ function BoardBar({ boardBar }) {
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-        <Chip
-          sx={CHIP_STYLES}
-          icon={<DashboardIcon />}
-          label={boardBar?.title}
-          clickable
-          variant="outlined"
-        />
+        <Tooltip title={boardBar?.description} >
+          <Chip
+            sx={CHIP_STYLES}
+            icon={<DashboardIcon />}
+            label={boardBar?.title}
+            clickable
+            variant="outlined"
+          />
+        </Tooltip>
 
         <Chip
           sx={CHIP_STYLES}
