@@ -97,14 +97,13 @@ function AppBar() {
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'primary.main' }} />
+                  <SearchIcon />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
                   <CloseIcon
                     sx={{
-                      color: 'primary.main',
                       cursor: searchValue ? 'pointer' : 'default',
                       opacity: searchValue ? '1' : '0'
                     }}

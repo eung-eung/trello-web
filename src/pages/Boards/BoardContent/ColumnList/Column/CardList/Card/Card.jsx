@@ -48,7 +48,9 @@ function Card({ card, isOverlay }) {
         transform: isOverlay ? 'rotate(5deg)' : 'none',
         opacity: isOverlay ? 0.8 : 1,
         pointerEvents: card.FE_Placeholder ? 'none' : 'unset',
-        position: card.FE_PlaceholderCard ? 'fixed' : 'unset'
+        position: card.FE_PlaceholderCard ? 'fixed' : 'unset',
+        border: '1px solid transparent',
+        '&:hover':{ borderColor: theme => theme.palette.mode === 'light' ? theme.colorSchemes.light.palette.primary.main : '#ffffffa8'}
       }}
     >
       {card?.cover && (
