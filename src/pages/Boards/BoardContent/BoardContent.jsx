@@ -4,9 +4,7 @@ import {
   DndContext,
   DragOverlay,
   getFirstCollision,
-  MouseSensor,
   pointerWithin,
-  TouchSensor,
   useSensor,
   useSensors
 } from '@dnd-kit/core'
@@ -21,6 +19,7 @@ import Column from './ColumnList/Column/Column'
 import ColumnList from './ColumnList/ColumnList'
 
 import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
+import { MouseSenSor, TouchSensor } from '~/utils/customDndSensors'
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
@@ -44,7 +43,7 @@ function BoardContent({ board }) {
     )
   }
 
-  const mouseSensor = useSensor(MouseSensor, {
+  const mouseSensor = useSensor(MouseSenSor, {
     activationConstraint: {
       distance: 10 // khoảng cách chuột di chuyển tối thiểu để kích hoạt kéo thả là 10px
     }
