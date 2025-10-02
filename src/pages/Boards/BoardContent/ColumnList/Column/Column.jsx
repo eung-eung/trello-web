@@ -7,6 +7,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
 
 import AddCard from '@mui/icons-material/AddCard'
 import Cloud from '@mui/icons-material/Cloud'
@@ -16,6 +17,7 @@ import ContentPaste from '@mui/icons-material/ContentPaste'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import DragHandle from '@mui/icons-material/DragHandle'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import CloseIcon from '@mui/icons-material/Close'
 
 import { useState } from 'react'
 import CardList from './CardList/CardList'
@@ -29,6 +31,13 @@ function Column({ column, isActiveColumn }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const [newCardTitle, setNewCardTitle] = useState('')
+  const [openNewCardForm, setOpenNewCardForm] = useState(false)
+
+  const toggleOpenNewCardForm = () => {
+    setNewCardTitle('')
+    setOpenNewCardForm(!openNewCardForm)
+  }
 
   const {
     attributes,
@@ -52,6 +61,16 @@ function Column({ column, isActiveColumn }) {
     opacity: isDragging ? 0.5 : undefined
   }
 
+  const createNewCard = () => {
+    if (!newCardTitle) {
+      return
+    }
+
+    //call api
+
+    //reset form
+    toggleOpenNewCardForm()
+  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -83,7 +102,9 @@ function Column({ column, isActiveColumn }) {
                 ? theme.palette.mode === 'dark'
                   ? '#3B82F6'
                   : 'rgba(45, 83, 255, 1)'
-                : 'none'
+                : 'none',
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
           {/*---- Header ----*/}
@@ -181,20 +202,80 @@ function Column({ column, isActiveColumn }) {
           <CardList cards={orderedCards} columnId={column._id} />
 
           {/*---- Footer ----*/}
-          <Box
-            sx={{
-              height: (theme) => theme.custom.columnFooterHeight,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2
-            }}
-          >
-            <Button startIcon={<AddCard />}>Add new card</Button>
-            <Tooltip title="Drag to move">
-              <DragHandle sx={{ cursor: 'pointer' }} />
-            </Tooltip>
-          </Box>
+          { !openNewCardForm
+            ? <Box
+              sx={{
+                height: (theme) => theme.custom.columnFooterHeight,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p:2
+              }}>
+              <Button
+                data-no-dnd="true"
+                onClick={toggleOpenNewCardForm}
+                startIcon={<AddCard />}
+              >
+                  Add new card
+              </Button>
+              <Tooltip title="Drag to move">
+                <DragHandle sx={{ cursor: 'pointer' }} />
+              </Tooltip>
+            </Box>
+            : <Box
+              data-no-dnd="true"
+              sx={{
+                display:'flex',
+                flexDirection:'column',
+                gap: 1,
+                padding:'0 5px',
+                margin: '8px 5px'
+              }}>
+              <Box>
+                <TextField
+                  placeholder="Enter card title..."
+                  type="text"
+                  variant="outlined"
+                  value={newCardTitle}
+                  multiline
+                  minRows={2}
+                  autoFocus
+                  onChange={(e) => setNewCardTitle(e.target.value)}
+                  size="small"
+                  sx={{
+                    width: '100%',
+                    background:(theme) => theme.palette.mode === 'light' ? 'white' : '#1d232ab0',
+                    '.MuiOutlinedInput-input': {
+                      '&::placeholder': {
+                        opacity:0.9
+                      }
+                    }
+                  }}
+                />
+              </Box>
+              <Box sx={{ display:'flex', paddingBottom:1 }}>
+                <Button
+                  variant='contained'
+                  color='success'
+                  size='small'
+                  sx={{
+                    color: 'white',
+                    boxShadow: 'none',
+                    borderColor: (theme) => theme.palette.success.main,
+                    '&:hover': { bgcolor: (theme) => theme.palette.success.main }
+                  }}
+                  onClick={createNewCard}
+                >
+                  Add card
+                </Button>
+                <Button
+                  onClick={toggleOpenNewCardForm}
+                  variant='text'>
+                  <CloseIcon />
+                </Button>
+              </Box>
+            </Box>
+          }
         </Box>
       </div>
     </div>
