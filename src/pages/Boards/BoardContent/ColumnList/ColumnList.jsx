@@ -10,7 +10,7 @@ import {
 } from '@dnd-kit/sortable'
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
-import { Bounce, toast } from 'react-toastify'
+import { Flip, toast } from 'react-toastify'
 
 function ColumnList({ columns, activeColumnId }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
@@ -23,15 +23,15 @@ function ColumnList({ columns, activeColumnId }) {
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const createNewColumn = () => {
     if (!newColumnTitle) {
-      toast.error('Please input column title', {
+      toast.warn('Please input column title', {
         position: 'bottom-left',
-        autoClose: 5000,
+        autoClose: 50000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        transition: Bounce
+        transition: Flip
       })
       return
     }
