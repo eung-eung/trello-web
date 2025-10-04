@@ -26,6 +26,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDroppable } from '@dnd-kit/core'
 import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
+import { Bounce, toast } from 'react-toastify'
 
 function Column({ column, isActiveColumn }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
@@ -63,6 +64,16 @@ function Column({ column, isActiveColumn }) {
 
   const createNewCard = () => {
     if (!newCardTitle) {
+      toast.error('Please input card title', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Bounce
+      })
       return
     }
 
