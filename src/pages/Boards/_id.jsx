@@ -6,7 +6,7 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI } from '~/apis/index'
+import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, updateBoardDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 function Board() {
   const [board, setBoard] = useState(null)
@@ -51,6 +51,21 @@ function Board() {
       return cloneBoard
     })
   }
+
+  //hàm xử lí api khi hoàn thành kéo+thả column
+  const moveColumns = async (dndOrderedColumns) => {
+    console.log({ dndOrderedColumns })
+    //update cho chuẩn data state Board
+    const dndColumnOrderIds = dndOrderedColumns.map(column => column._id)
+
+    const cloneBoard = cloneDeep(board)
+    cloneBoard.columns = dndOrderedColumns
+    cloneBoard.columnOrderIds = dndColumnOrderIds
+    setBoard(cloneBoard)
+
+    await updateBoardDetailsAPI(cloneBoard._id, { columnOrderIds: dndColumnOrderIds })
+
+  }
   return (
     <Container
       disableGutters
@@ -59,7 +74,7 @@ function Board() {
     >
       <AppBar />
       <BoardBar boardBar={board} />
-      <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard}/>
+      <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard} moveColumns={moveColumns}/>
     </Container>
   )
 }
