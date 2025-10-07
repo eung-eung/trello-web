@@ -25,7 +25,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard }) {
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
 
   //cùng 1 thời điểm chỉ có 1 item đang kéo thả (column hoặc card)
@@ -410,6 +410,8 @@ function BoardContent({ board }) {
         <ColumnList
           columns={orderedColumnsState}
           activeColumnId={columnToShowBorder?._id}
+          createNewColumn={createNewColumn}
+          createNewCard={createNewCard}
         />
 
         <DragOverlay dropAnimation={customDropAnimation}>

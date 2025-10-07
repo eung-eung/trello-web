@@ -50,7 +50,7 @@ function Card({ card, isOverlay }) {
         pointerEvents: card.FE_Placeholder ? 'none' : 'unset',
         position: card.FE_PlaceholderCard ? 'fixed' : 'unset',
         border: '1px solid transparent',
-        '&:hover':{ borderColor: theme => theme.palette.mode === 'light' ? theme.colorSchemes.light.palette.primary.main : '#ffffffa8'}
+        '&:hover':{ borderColor: theme => theme.palette.mode === 'light' ? theme.colorSchemes.light.palette.primary.main : '#ffffffa8' }
       }}
     >
       {card?.cover && (

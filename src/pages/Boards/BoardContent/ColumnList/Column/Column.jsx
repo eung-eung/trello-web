@@ -26,8 +26,9 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDroppable } from '@dnd-kit/core'
 import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
+import { Bounce, toast } from 'react-toastify'
 
-function Column({ column, isActiveColumn }) {
+function Column({ column, isActiveColumn, createNewCard }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -61,13 +62,27 @@ function Column({ column, isActiveColumn }) {
     opacity: isDragging ? 0.5 : undefined
   }
 
-  const createNewCard = () => {
+  const handleCreateNewCard = async () => {
     if (!newCardTitle) {
+      toast.error('Please input card title', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Bounce
+      })
       return
     }
 
     //call api
-
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+    await createNewCard(newCardData)
     //reset form
     toggleOpenNewCardForm()
   }
@@ -264,7 +279,7 @@ function Column({ column, isActiveColumn }) {
                     borderColor: (theme) => theme.palette.success.main,
                     '&:hover': { bgcolor: (theme) => theme.palette.success.main }
                   }}
-                  onClick={createNewCard}
+                  onClick={handleCreateNewCard}
                 >
                   Add card
                 </Button>

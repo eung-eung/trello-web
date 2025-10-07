@@ -10,8 +10,9 @@ import {
 } from '@dnd-kit/sortable'
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
+import { Flip, toast } from 'react-toastify'
 
-function ColumnList({ columns, activeColumnId }) {
+function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
 
   const toggleOpenNewColumnForm = () => {
@@ -20,12 +21,25 @@ function ColumnList({ columns, activeColumnId }) {
   }
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const createNewColumn = () => {
+  const handleCreateNewColumn = async () => {
     if (!newColumnTitle) {
+      toast.warn('Please input column title', {
+        position: 'bottom-left',
+        autoClose: 50000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip
+      })
       return
     }
-
+    const newColumnData = {
+      title: newColumnTitle
+    }
     //call api
+    await createNewColumn(newColumnData)
     //đóng form create column
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -53,6 +67,7 @@ function ColumnList({ columns, activeColumnId }) {
             key={column._id}
             column={column}
             isActiveColumn={activeColumnId === column._id}
+            createNewCard={createNewCard}
           />
         ))}
 
@@ -152,7 +167,7 @@ function ColumnList({ columns, activeColumnId }) {
                   borderColor: (theme) => theme.palette.success.main,
                   '&:hover': { bgcolor: (theme) => theme.palette.success.main }
                 }}
-                onClick={createNewColumn}
+                onClick={handleCreateNewColumn}
               >
                 Add column
               </Button>
