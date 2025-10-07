@@ -25,7 +25,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
 
   //cùng 1 thời điểm chỉ có 1 item đang kéo thả (column hoặc card)
@@ -33,8 +33,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [columnToShowBorder, setColumnToShowBorder] = useState(null)
-  const [cloneColumnWhenDraggingCard, setCloneColumnWhenDraggingCard] =
-    useState(null)
+  const [cloneColumnWhenDraggingCard, setCloneColumnWhenDraggingCard] = useState(null)
 
   const lastOverId = useRef(null)
   const findColumnByCardId = (cardId) => {
@@ -153,10 +152,9 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
 
       const modifier = isBelowOverItem ? 1 : 0
 
-      newCardIndex =
-        overCardIndex >= 0
-          ? overCardIndex + modifier
-          : overColumn?.cards?.length + 1
+      newCardIndex = overCardIndex >= 0
+        ? overCardIndex + modifier
+        : overColumn?.cards?.length + 1
 
       // clone deep để tránh mutate chính prev, xử lí trên mảng mới
       const nextColumns = cloneDeep(prev)
@@ -369,6 +367,7 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         )
 
         //xử lí api sau
+        moveColumns(dndOrderedColumns)
         setOrderedColumnsState(dndOrderedColumns)
       }
     }
