@@ -6,7 +6,7 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
+import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 function Board() {
   const [board, setBoard] = useState(null)
@@ -54,7 +54,7 @@ function Board() {
 
   //hàm xử lí api khi hoàn thành kéo+thả column
   const moveColumns = async (dndOrderedColumns) => {
-    console.log({ dndOrderedColumns })
+
     //update cho chuẩn data state Board
     const dndColumnOrderIds = dndOrderedColumns.map(column => column._id)
 
@@ -81,8 +81,23 @@ function Board() {
   }
 
   //hàm xử lí api khi hoàn thành kéo thả card giữa các column với nhau
-  const moveCardsBetweenColumns = async (prevColumn, nextColumn, dndOrderedCards) => {
+  const moveCardsToDifferentColumns = async (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
 
+    //update cho chuẩn data state Board
+    const dndColumnOrderIds = dndOrderedColumns.map(column => column._id)
+    const cloneBoard = cloneDeep(board)
+    cloneBoard.columns = dndOrderedColumns
+    cloneBoard.columnOrderIds = dndColumnOrderIds
+    setBoard(cloneBoard)
+
+    //xử lí api
+    await moveCardToDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds: dndOrderedColumns.find(col => col._id === prevColumnId)?.cardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedColumns.find(col => col._id === nextColumnId)?.cardOrderIds
+    })
   }
   return (
     <Container
@@ -98,7 +113,7 @@ function Board() {
         createNewCard={createNewCard}
         moveColumns={moveColumns}
         moveCardsInSameColumn={moveCardsInSameColumn}
-        moveCardsBetweenColumns={moveCardsBetweenColumns}
+        moveCardsToDifferentColumns={moveCardsToDifferentColumns}
       />
     </Container>
   )
