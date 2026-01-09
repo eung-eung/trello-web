@@ -12,12 +12,20 @@ export const updateBoardDetailsAPI = async (boardId, updateBoardDetailsData) => 
   return response.data
 }
 
+export const moveCardToDifferentColumnAPI = async (updateData) => {
+  const response = await axios.put(`${API_ENDPOINT}/v1/boards/supports/moving-card`, updateData)
+  return response.data
+}
 /* API COLUMNs */
 export const createNewColumnAPI = async (newColumnData) => {
   const response = await axios.post(`${API_ENDPOINT}/v1/columns`, newColumnData)
   return response.data
 }
 
+export const updateColumnDetailsAPI = async (columnId, updateColumnDetailsData) => {
+  const response = await axios.put(`${API_ENDPOINT}/v1/columns/${columnId}`, updateColumnDetailsData)
+  return response.data
+}
 
 /* API CARDs */
 export const createNewCardAPI = async (newCardData) => {

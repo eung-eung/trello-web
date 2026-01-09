@@ -6,7 +6,7 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, updateBoardDetailsAPI } from '~/apis/index'
+import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 function Board() {
   const [board, setBoard] = useState(null)
@@ -54,7 +54,7 @@ function Board() {
 
   //hàm xử lí api khi hoàn thành kéo+thả column
   const moveColumns = async (dndOrderedColumns) => {
-    console.log({ dndOrderedColumns })
+
     //update cho chuẩn data state Board
     const dndColumnOrderIds = dndOrderedColumns.map(column => column._id)
 
@@ -66,6 +66,39 @@ function Board() {
     await updateBoardDetailsAPI(cloneBoard._id, { columnOrderIds: dndColumnOrderIds })
 
   }
+
+  //hàm xử lí api khi hoàn thành kéo+thả card trong cùng 1 column
+  const moveCardsInSameColumn = async (columnId, dndOrderedCards) => {
+    const dndCardOrderIds = dndOrderedCards.map(card => card._id)
+
+    const cloneBoard = cloneDeep(board)
+    const columnToUpdate = cloneBoard.columns.find(column => column._id === columnId)
+    columnToUpdate.cards = dndOrderedCards
+    columnToUpdate.cardOrderIds = dndCardOrderIds
+    setBoard(cloneBoard)
+
+    await updateColumnDetailsAPI(columnId, { cardOrderIds: dndCardOrderIds })
+  }
+
+  //hàm xử lí api khi hoàn thành kéo thả card giữa các column với nhau
+  const moveCardsToDifferentColumns = async (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+
+    //update cho chuẩn data state Board
+    const dndColumnOrderIds = dndOrderedColumns.map(column => column._id)
+    const cloneBoard = cloneDeep(board)
+    cloneBoard.columns = dndOrderedColumns
+    cloneBoard.columnOrderIds = dndColumnOrderIds
+    setBoard(cloneBoard)
+
+    //xử lí api
+    await moveCardToDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds: dndOrderedColumns.find(col => col._id === prevColumnId)?.cardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedColumns.find(col => col._id === nextColumnId)?.cardOrderIds
+    })
+  }
   return (
     <Container
       disableGutters
@@ -74,7 +107,14 @@ function Board() {
     >
       <AppBar />
       <BoardBar boardBar={board} />
-      <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard} moveColumns={moveColumns}/>
+      <BoardContent
+        board={board}
+        createNewColumn={createNewColumn}
+        createNewCard={createNewCard}
+        moveColumns={moveColumns}
+        moveCardsInSameColumn={moveCardsInSameColumn}
+        moveCardsToDifferentColumns={moveCardsToDifferentColumns}
+      />
     </Container>
   )
 }
