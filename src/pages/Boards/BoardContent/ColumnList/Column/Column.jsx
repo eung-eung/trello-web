@@ -27,6 +27,8 @@ import { CSS } from '@dnd-kit/utilities'
 import { useDroppable } from '@dnd-kit/core'
 import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
 import { Bounce, toast } from 'react-toastify'
+import useConfirm from '~/hooks/useConfirm'
+import { useInteractionLock } from '~/contexts/InteractionLockProvider'
 
 function Column({ column, isActiveColumn, createNewCard }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
@@ -34,7 +36,11 @@ function Column({ column, isActiveColumn, createNewCard }) {
   const open = Boolean(anchorEl)
   const [newCardTitle, setNewCardTitle] = useState('')
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
-
+  const [confirm, ConfirmRemoveDialog] = useConfirm(
+    'Remove column',
+    'Are you sure you want to remove this column? All cards in this column will also be removed.'
+  )
+  const { locked, lock, unlock } = useInteractionLock()
   const toggleOpenNewCardForm = () => {
     setNewCardTitle('')
     setOpenNewCardForm(!openNewCardForm)
@@ -47,7 +53,7 @@ function Column({ column, isActiveColumn, createNewCard }) {
     transform,
     transition,
     isDragging
-  } = useSortable({ id: column._id, data: { ...column } })
+  } = useSortable({ id: column._id, data: { ...column }, disabled: locked })
 
   const { setNodeRef: setPlaceholderRef } = useDroppable({
     id: `${PLACEHOLDER_CARD_ID}-${column._id}`,
@@ -86,11 +92,28 @@ function Column({ column, isActiveColumn, createNewCard }) {
     //reset form
     toggleOpenNewCardForm()
   }
-  const handleClick = (event) => {
+
+  const handleClick = (event, reason) => {
+    console.log('clicK: ', reason)
+    lock()
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = () => {
+
+  const handleClose = (event, reason) => {
+    console.log('close: ', reason)
+    if (reason && reason === 'backdropClick') {
+      unlock()
+    } else {
+      lock()
+    }
     setAnchorEl(null)
+  }
+
+  const handleRemoveColumn = async (columnId) => {
+    const ok = await confirm()
+    if (!ok) return
+    //call api
+    console.log('api', columnId)
   }
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
@@ -172,9 +195,18 @@ function Column({ column, isActiveColumn, createNewCard }) {
                   }
                 }}
               >
-                <MenuItem>
+                <MenuItem sx={{
+                  '&:hover': {
+                    color: 'success.light',
+                    '& .add-card-icon':{
+                      color: 'success.light'
+                    }
+                  }
+                }}
+                onClick={toggleOpenNewCardForm}
+                >
                   <ListItemIcon>
-                    <AddCard fontSize="small" />
+                    <AddCard className='add-card-icon' fontSize="small" />
                   </ListItemIcon>
                   <ListItemText>Add new card</ListItemText>
                 </MenuItem>
@@ -197,9 +229,18 @@ function Column({ column, isActiveColumn, createNewCard }) {
                   <ListItemText>Paste</ListItemText>
                 </MenuItem>
                 <Divider />
-                <MenuItem>
+                <MenuItem sx={{
+                  '&:hover': {
+                    color: 'warning.dark',
+                    '& .delete-forever-icon':{
+                      color: 'warning.dark'
+                    }
+                  }
+                }}
+                onClick={() => handleRemoveColumn(column._id)}
+                >
                   <ListItemIcon>
-                    <DeleteForeverIcon fontSize="small" />
+                    <DeleteForeverIcon className='delete-forever-icon' color='inherit' fontSize="small" />
                   </ListItemIcon>
                   <ListItemText>Remove this column</ListItemText>
                 </MenuItem>
@@ -215,6 +256,9 @@ function Column({ column, isActiveColumn, createNewCard }) {
 
           {/* Card list */}
           <CardList cards={orderedCards} columnId={column._id} />
+
+          {/* confirm remove column dialog */}
+          <ConfirmRemoveDialog />
 
           {/*---- Footer ----*/}
           { !openNewCardForm
