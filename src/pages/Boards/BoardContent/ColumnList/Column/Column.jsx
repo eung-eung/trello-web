@@ -93,25 +93,26 @@ function Column({ column, isActiveColumn, createNewCard }) {
     toggleOpenNewCardForm()
   }
 
-  const handleClick = (event, reason) => {
-    console.log('clicK: ', reason)
-    lock()
+  const handleClick = (event) => {
+    if (!locked) {
+      lock()
+    }
     setAnchorEl(event.currentTarget)
   }
 
   const handleClose = (event, reason) => {
-    console.log('close: ', reason)
     if (reason && reason === 'backdropClick') {
       unlock()
-    } else {
-      lock()
     }
     setAnchorEl(null)
   }
 
   const handleRemoveColumn = async (columnId) => {
     const ok = await confirm()
-    if (!ok) return
+    if (!ok) {
+      setAnchorEl(null)
+      return
+    }
     //call api
     console.log('api', columnId)
   }
