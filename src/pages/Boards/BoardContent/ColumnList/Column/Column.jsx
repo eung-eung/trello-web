@@ -30,7 +30,7 @@ import { Bounce, toast } from 'react-toastify'
 import useConfirm from '~/hooks/useConfirm'
 import { useInteractionLock } from '~/contexts/InteractionLockProvider'
 
-function Column({ column, isActiveColumn, createNewCard }) {
+function Column({ column, isActiveColumn, createNewCard, deleteColumn }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -115,7 +115,10 @@ function Column({ column, isActiveColumn, createNewCard }) {
     }
     //call api
     console.log('api', columnId)
+    await deleteColumn(columnId)
+    setAnchorEl(null)
   }
+
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <div ref={!!column.cards?.length ? null : setPlaceholderRef}>

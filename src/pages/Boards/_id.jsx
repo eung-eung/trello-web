@@ -6,13 +6,13 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { createNewCardAPI, createNewColumnAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
+import { createNewCardAPI, createNewColumnAPI, deleteColumnAPI, fetchBoardDetailsAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 function Board() {
   const [board, setBoard] = useState(null)
 
   useEffect( () => {
-    const boardId = '68da959e5e36d85262de9971'
+    const boardId = '69d5fa000905b348bbce8505' //tạm hardcode, sau này sẽ lấy từ url param
     fetchBoardDetailsAPI(boardId).then(board => {
       setBoard(board)
     })
@@ -99,6 +99,18 @@ function Board() {
       nextCardOrderIds: dndOrderedColumns.find(col => col._id === nextColumnId)?.cardOrderIds
     })
   }
+
+  //hàm xử lí api xóa column
+  const deleteColumn = async (columnId) => {
+    await deleteColumnAPI(columnId)
+    //xử lí state
+    setBoard(board => {
+      const cloneBoard = cloneDeep(board)
+      cloneBoard.columns = cloneBoard.columns.filter(column => column._id !== columnId)
+      cloneBoard.columnOrderIds = cloneBoard.columnOrderIds.filter(id => id !== columnId)
+      return cloneBoard
+    })
+  }
   return (
     <Container
       disableGutters
@@ -114,6 +126,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardsInSameColumn={moveCardsInSameColumn}
         moveCardsToDifferentColumns={moveCardsToDifferentColumns}
+        deleteColumn={deleteColumn}
       />
     </Container>
   )

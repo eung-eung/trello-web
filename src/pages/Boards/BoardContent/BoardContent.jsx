@@ -29,7 +29,15 @@ const EVENT_DRAGGING = {
   DRAG_OVER: 'EVENT_DRAGGING_DRAG_OVER',
   DRAG_END: 'EVENT_DRAGGING_DRAG_END'
 }
-function BoardContent({ board, createNewColumn, createNewCard, moveColumns, moveCardsInSameColumn, moveCardsToDifferentColumns }) {
+function BoardContent({ 
+  board,
+  createNewColumn,
+  createNewCard,
+  moveColumns,
+  moveCardsInSameColumn,
+  moveCardsToDifferentColumns,
+  deleteColumn
+}) {
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
 
   //cùng 1 thời điểm chỉ có 1 item đang kéo thả (column hoặc card)
@@ -429,6 +437,7 @@ function BoardContent({ board, createNewColumn, createNewCard, moveColumns, move
           activeColumnId={columnToShowBorder?._id}
           createNewColumn={createNewColumn}
           createNewCard={createNewCard}
+          deleteColumn={deleteColumn}
         />
 
         <DragOverlay dropAnimation={customDropAnimation}>

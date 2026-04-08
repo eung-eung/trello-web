@@ -12,7 +12,7 @@ import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import { Flip, toast } from 'react-toastify'
 
-function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard }) {
+function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard, deleteColumn }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
 
   const toggleOpenNewColumnForm = () => {
@@ -68,6 +68,7 @@ function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard })
             column={column}
             isActiveColumn={activeColumnId === column._id}
             createNewCard={createNewCard}
+            deleteColumn={deleteColumn}
           />
         ))}
 
