@@ -118,6 +118,7 @@ function Column({ column, isActiveColumn, createNewCard, deleteColumn }) {
     await deleteColumn(columnId)
     setAnchorEl(null)
   }
+
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <div ref={!!column.cards?.length ? null : setPlaceholderRef}>
