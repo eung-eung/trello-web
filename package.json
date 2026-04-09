@@ -18,11 +18,16 @@
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
     "@reduxjs/toolkit": "^2.11.2",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "axios": "^1.12.2",
+    "framer-motion": "^12.38.0",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.72.1",
     "react-redux": "^9.2.0",
+    "react-router-dom": "^7.14.0",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
