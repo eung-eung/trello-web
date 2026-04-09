@@ -11,21 +11,27 @@ import {
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import { Flip, toast } from 'react-toastify'
+import { createNewColumnAPI } from '~/apis'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { cloneDeep } from 'lodash'
 
-function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard, deleteColumn }) {
+function ColumnList({ columns, activeColumnId }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectorCurrentActiveBoard)
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
 
   const toggleOpenNewColumnForm = () => {
     setOpenNewColumnForm(!openNewColumnForm)
     setNewColumnTitle('')
   }
-
   const [newColumnTitle, setNewColumnTitle] = useState('')
+
   const handleCreateNewColumn = async () => {
     if (!newColumnTitle) {
       toast.warn('Please input column title', {
         position: 'bottom-left',
-        autoClose: 50000,
+        autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
@@ -35,11 +41,24 @@ function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard, d
       })
       return
     }
+
     const newColumnData = {
       title: newColumnTitle
     }
     //call api
-    await createNewColumn(newColumnData)
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id
+    })
+    //nếu newBoard vẫn còn reference tới state cũ trong store
+    //thì sẽ bị frozen array (vì state trong redux store là immutable) => sẽ không push được column mới vào nữa
+    //=> phải cloneDeep để tạo ra một newBoard hoàn toàn mới, không còn reference tới state cũ trong store nữa
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+
+    dispatch(updateCurrentActiveBoard(newBoard))
+
     //đóng form create column
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -67,8 +86,6 @@ function ColumnList({ columns, activeColumnId, createNewColumn, createNewCard, d
             key={column._id}
             column={column}
             isActiveColumn={activeColumnId === column._id}
-            createNewCard={createNewCard}
-            deleteColumn={deleteColumn}
           />
         ))}
 

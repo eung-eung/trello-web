@@ -29,8 +29,14 @@ import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
 import { Bounce, toast } from 'react-toastify'
 import useConfirm from '~/hooks/useConfirm'
 import { useInteractionLock } from '~/contexts/InteractionLockProvider'
+import { createNewCardAPI, deleteColumnAPI } from '~/apis'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { cloneDeep } from 'lodash'
 
-function Column({ column, isActiveColumn, createNewCard, deleteColumn }) {
+function Column({ column, isActiveColumn }) {
+  const board = useSelector(selectorCurrentActiveBoard)
+  const dispatch = useDispatch()
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -88,7 +94,21 @@ function Column({ column, isActiveColumn, createNewCard, deleteColumn }) {
       title: newCardTitle,
       columnId: column._id
     }
-    await createNewCard(newCardData)
+
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+    //
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards.push(createdCard)
+      columnToUpdate.cardOrderIds.push(createdCard._id)
+    }
+
+    dispatch(updateCurrentActiveBoard(newBoard))
+
     //reset form
     toggleOpenNewCardForm()
   }
@@ -114,8 +134,16 @@ function Column({ column, isActiveColumn, createNewCard, deleteColumn }) {
       return
     }
     //call api
-    console.log('api', columnId)
-    await deleteColumn(columnId)
+    await deleteColumnAPI(columnId)
+    const newBoard = cloneDeep(board)
+    newBoard.columns = newBoard.columns.filter(column => column._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(id => id !== columnId)
+
+    dispatch(updateCurrentActiveBoard(newBoard))
+    toast.success('Column removed successfully', {
+      position: 'bottom-left',
+      autoClose: 5000
+    })
     setAnchorEl(null)
   }
 
