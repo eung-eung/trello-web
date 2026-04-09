@@ -6,14 +6,19 @@ import CssBaseline from '@mui/material/CssBaseline'
 import theme from '~/theme.js'
 import { InteractionLockProvider } from './contexts/InteractionLockProvider'
 import CustomToastifyContainer from './components/CustomToastifyContainer/CustomToastifyContainer'
+import { Provider } from 'react-redux'
+import { store } from '~/redux/store.js'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <InteractionLockProvider>
-        <App />
-      </InteractionLockProvider>
-      <CustomToastifyContainer />
-    </CssVarsProvider>
+    <Provider store={store}>
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <InteractionLockProvider>
+          <App />
+        </InteractionLockProvider>
+        <CustomToastifyContainer />
+      </CssVarsProvider>
+    </Provider>
   </StrictMode>
 )

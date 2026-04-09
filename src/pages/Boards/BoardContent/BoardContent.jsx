@@ -29,14 +29,11 @@ const EVENT_DRAGGING = {
   DRAG_OVER: 'EVENT_DRAGGING_DRAG_OVER',
   DRAG_END: 'EVENT_DRAGGING_DRAG_END'
 }
-function BoardContent({ 
+function BoardContent({
   board,
-  createNewColumn,
-  createNewCard,
   moveColumns,
   moveCardsInSameColumn,
-  moveCardsToDifferentColumns,
-  deleteColumn
+  moveCardsToDifferentColumns
 }) {
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
 
@@ -435,9 +432,6 @@ function BoardContent({
         <ColumnList
           columns={orderedColumnsState}
           activeColumnId={columnToShowBorder?._id}
-          createNewColumn={createNewColumn}
-          createNewCard={createNewCard}
-          deleteColumn={deleteColumn}
         />
 
         <DragOverlay dropAnimation={customDropAnimation}>
