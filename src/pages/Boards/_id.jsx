@@ -18,7 +18,6 @@ function Board() {
   const { boardId } = useParams()
 
   useEffect( () => {
-    // const boardId = '69d5fa000905b348bbce8505' //tạm hardcode, sau này sẽ lấy từ url param
     //call api
     dispatch(fetchBoardDetailsAPI(boardId))
   }, [dispatch, boardId])
