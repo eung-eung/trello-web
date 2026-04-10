@@ -69,10 +69,15 @@ const theme = createTheme({
         root: ({ theme }) => ({
           textTransform: 'none',
           fontWeight: 'bold',
-          color:
-            theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+          color: '#ffffff'
+        }),
+        outlined: ({ theme }) => ({
+          color: theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+        }),
+        text: ({ theme }) => ({
+          color: theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
         })
-      }
+      },
     },
     MuiInputLabel: {
       styleOverrides: {
