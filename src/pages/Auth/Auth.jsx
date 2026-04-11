@@ -111,8 +111,16 @@ export default function Auth() {
           transition={{ duration: 0.3 }}
           width={360}
         >
-          { isLogin && <LoginForm /> }
-          { isRegister && <RegisterForm /> }
+          <Box sx={{
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter:'blur(10px)',
+            padding: '2rem',
+            borderRadius: '8px',
+            border: '1px solid rgb(0, 0, 0)'
+          }}>
+            { isLogin && <LoginForm /> }
+            { isRegister && <RegisterForm /> }
+          </Box>
         </BoxMotion>
       </Box>
     </>
