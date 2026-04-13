@@ -3,13 +3,19 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_CONFIRM_RULE_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE} from '../../utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import ButtonLoading from '~/components/Loading/ButtonLoading'
+import { LOADING_KEY } from '~/utils/constants'
+import { useDispatch } from 'react-redux'
+import { startLoading } from '~/redux/loading/loadingSlice'
 export default function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   // const password = watch('password')
 
   const submitRegister = (data) => {
     console.log(data)
+    dispatch(startLoading(LOADING_KEY.auth.register))
   }
 
   return (
@@ -68,8 +74,15 @@ export default function RegisterForm() {
         <FieldErrorAlert error={errors} fieldName='confirmPassword' />
       </Box>
       <Box sx={{ mt: 2 }}>
-        <Button type='submit' variant='contained' color='primary' fullWidth>Register</Button>
-
+        <ButtonLoading
+          type='submit'
+          variant='contained'
+          color='primary'
+          fullWidth
+          loadingKey={LOADING_KEY.auth.register}
+        >
+          Register
+        </ButtonLoading>
         <Typography variant='body2' align='center' sx={{ mt: 2 }}>
         Already have an account? <Button variant='text' onClick={() => navigate('/login')}>Login</Button>
         </Typography>

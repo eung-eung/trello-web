@@ -11,12 +11,15 @@ import { cloneDeep } from 'lodash'
 import { fetchBoardDetailsAPI, updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import SectionLoading from '~/components/Loading/SectionLoading'
+import { LOADING_KEY } from '~/utils/constants'
 
 function Board() {
   const dispatch = useDispatch()
   const board = useSelector(selectorCurrentActiveBoard)
+  const loadingBoard = useSelector(state => state.loading)
   const { boardId } = useParams()
-
+  console.log({loadingBoard})
   useEffect( () => {
     //call api
     dispatch(fetchBoardDetailsAPI(boardId))
@@ -76,13 +79,15 @@ function Board() {
       sx={{ height: '100vh', overflow: 'hidden' }}
     >
       <AppBar />
-      <BoardBar boardBar={board} />
-      <BoardContent
-        board={board}
-        moveColumns={moveColumns}
-        moveCardsInSameColumn={moveCardsInSameColumn}
-        moveCardsToDifferentColumns={moveCardsToDifferentColumns}
-      />
+      <SectionLoading loadingKey={LOADING_KEY.board}>
+        <BoardBar boardBar={board} />
+        <BoardContent
+          board={board}
+          moveColumns={moveColumns}
+          moveCardsInSameColumn={moveCardsInSameColumn}
+          moveCardsToDifferentColumns={moveCardsToDifferentColumns}
+        />
+      </SectionLoading>
     </Container>
   )
 }

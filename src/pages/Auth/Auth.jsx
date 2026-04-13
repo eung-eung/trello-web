@@ -8,6 +8,9 @@ import LoginForm from './LoginForm'
 import { useLocation } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
 import { motion } from 'framer-motion'
+import { useDispatch } from 'react-redux'
+import { resetLoading } from '~/redux/loading/loadingSlice'
+import { LOADING_KEY } from '~/utils/constants'
 
 const BoxMotion = motion(Box)
 export default function Auth() {
@@ -15,7 +18,7 @@ export default function Auth() {
   const location = useLocation()
   const theme = useTheme()
   const mode = theme.palette.mode
-
+  const dispatch = useDispatch()
   const isLogin = location.pathname === '/login'
   const isRegister = location.pathname === '/register'
 
@@ -27,7 +30,16 @@ export default function Auth() {
       setInit(true)
     }
     initParticles()
-  }, [])
+    return () => {
+      if (isLogin) {
+        dispatch(resetLoading(LOADING_KEY.auth.login))
+      }
+
+      if (isRegister) {
+        dispatch(resetLoading(LOADING_KEY.auth.register))
+      }
+    }
+  }, [isLogin, isRegister, dispatch])
 
   const getOptions = (mode) => (
     {
@@ -55,7 +67,7 @@ export default function Auth() {
           'direction': 'top',
           'outMode': 'destroy'
         },
-        'color': { 
+        'color': {
           'value': mode === 'light' ? [
             '#a0c4ff',
             '#bdb2ff',

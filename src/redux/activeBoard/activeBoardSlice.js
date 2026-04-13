@@ -10,7 +10,12 @@ import { mapOrder } from '~/utils/sorts'
 export const fetchBoardDetailsAPI = createAsyncThunk(
   'activeBoard/fetchBoardDetailsAPI',
   async (boardId) => {
-    const response = await authorizeAxios.get(`${API_ENDPOINT}/v1/boards/${boardId}`)
+    const response = await authorizeAxios
+      .get(`${API_ENDPOINT}/v1/boards/${boardId}`, {
+        meta: {
+          loadingKey: 'board'
+        }
+      })
     return response.data
   }
 )

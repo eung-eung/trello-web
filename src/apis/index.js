@@ -1,6 +1,6 @@
 import axios from 'axios'
 import authorizeAxios from '~/utils/authorizeAxios'
-import { API_ENDPOINT } from '~/utils/constants'
+import { API_ENDPOINT, LOADING_KEY } from '~/utils/constants'
 // đã chuyển qua redux
 // export const fetchBoardDetailsAPI = async (boardId) => {
 //   const response = await axios.get(`${API_ENDPOINT}/v1/boards/${boardId}`)
@@ -36,6 +36,10 @@ export const deleteColumnAPI = async (columnId) => {
 
 /* API CARDs */
 export const createNewCardAPI = async (newCardData) => {
-  const response = await authorizeAxios.post(`${API_ENDPOINT}/v1/cards`, newCardData)
+  const response = await authorizeAxios.post(`${API_ENDPOINT}/v1/cards`, newCardData, {
+    meta: {
+      loadingKey: LOADING_KEY.card.create(newCardData.columnId)
+    }
+  })
   return response.data
 }
