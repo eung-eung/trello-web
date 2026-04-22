@@ -1,5 +1,5 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Alert, Box, Button, TextField, Typography } from '@mui/material'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import {
   EMAIL_RULE,
@@ -11,21 +11,58 @@ import {
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import ButtonLoading from '~/components/Loading/ButtonLoading'
 import { LOADING_KEY } from '~/utils/constants'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import InfoIcon from '@mui/icons-material/Info'
+import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
-import { startLoading } from '~/redux/loading/loadingSlice'
+import { logInUserApi } from '~/redux/user/userSlice'
+
 export default function LoginForm() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const { register, handleSubmit, formState: { errors } } = useForm()
+  const [searchParams] = useSearchParams()
+  const verifedEmail = searchParams.get('verifedEmail')
+  const registeredEmail = searchParams.get('registeredEmail')
+  const dispatch = useDispatch()
+  const submitLogin = async (data) => {
+    const { email, password } = data
+    toast.promise(
+      dispatch(logInUserApi({ email, password })),
+      {
+        pending: 'Logging in...'
+      }
+    ).then((res) => {
+      //không có lỗi thì redirect về trang chủ
+      if (!res.error) navigate('/')
+    })
 
-  const submitLogin = (data) => {
-    console.log(data)
-    dispatch(startLoading(LOADING_KEY.auth.login))
   }
 
   return (
     <form onSubmit={handleSubmit(submitLogin)}>
       <Typography variant='h6' align='center'>Login</Typography>
+      {/* Alert */}
+      {verifedEmail && (
+        <Alert
+          variant='standard'
+          severity='info'
+          iconMapping={{
+            info: <InfoIcon sx={{ color: '#3bc4f6' }}/>
+          }}
+        >
+            Your email <strong>{verifedEmail}</strong> has been verified successfully! You can now log in with this email. Have a nice day!
+        </Alert>
+      )}
+      {registeredEmail && (
+        <Alert
+          variant='standard'
+          severity='success'
+          iconMapping={{
+            success: <CheckCircleIcon sx={{ color: '#22c55e' }}/>
+          }}>
+            Account created successfully! Please check your email <strong>{registeredEmail}</strong> to verify your account before logging in.
+        </Alert>
+      )}
       <Box>
         <TextField
           autoFocus
