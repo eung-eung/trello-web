@@ -5,24 +5,30 @@ import Particles, { initParticlesEngine } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
 import { useEffect, useMemo, useState } from 'react'
 import LoginForm from './LoginForm'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import RegisterForm from './RegisterForm'
 import { motion } from 'framer-motion'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { resetLoading } from '~/redux/loading/loadingSlice'
 import { LOADING_KEY } from '~/utils/constants'
-
+import { selectCurrentUser } from '~/redux/user/userSlice'
 const BoxMotion = motion(Box)
+
 export default function Auth() {
   const [init, setInit] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const theme = useTheme()
   const mode = theme.palette.mode
   const dispatch = useDispatch()
   const isLogin = location.pathname === '/login'
   const isRegister = location.pathname === '/register'
+  const currentUser = useSelector(selectCurrentUser)
 
   useEffect(() => {
+    if (currentUser) {
+      navigate('/', { replace: true })
+    }
     const initParticles = async () => {
       await initParticlesEngine(async (engine) => {
         await loadSlim(engine)
@@ -39,7 +45,7 @@ export default function Auth() {
         dispatch(resetLoading(LOADING_KEY.auth.register))
       }
     }
-  }, [isLogin, isRegister, dispatch])
+  }, [isLogin, isRegister, dispatch, currentUser, navigate])
 
   const getOptions = (mode) => (
     {
