@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { toast } from 'react-toastify'
 import authorizeAxios from '~/utils/authorizeAxios'
 import { API_ENDPOINT, LOADING_KEY } from '~/utils/constants'
 // đã chuyển qua redux
@@ -40,6 +40,29 @@ export const createNewCardAPI = async (newCardData) => {
     meta: {
       loadingKey: LOADING_KEY.card.create(newCardData.columnId)
     }
+  })
+  return response.data
+}
+
+// API USERS
+export const registerUserApi = async (registerData) => {
+  const response = await authorizeAxios.post(`${API_ENDPOINT}/v1/users/register`, registerData, {
+    meta: {
+      loadingKey: LOADING_KEY.auth.register
+    }
+  })
+  toast.success('Account created successfully! Please check your email to verify your account before logging in.', {
+    theme: 'colored'
+  })
+  return response.data
+}
+
+export const verifyUserApi = async (data) => {
+  const response = await authorizeAxios.put(`${API_ENDPOINT}/v1/users/verify`, data, {
+    skipAuthErrorHandler: true
+  })
+  toast.success('Account verified successfully! Now you can log in to enjoy our services.', {
+    theme: 'colored'
   })
   return response.data
 }
