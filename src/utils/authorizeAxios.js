@@ -23,8 +23,10 @@ authorizeAxios.interceptors.request.use((config) => {
     errorMessage = error.response?.data?.message
   }
 
-  if (error.response?.status !== 410) {
-    toast.error(errorMessage)
+  if (error?.response?.status !== 410) {
+    toast.error(errorMessage, {
+      theme: 'colored'
+    })
   }
 })
 
@@ -43,7 +45,9 @@ authorizeAxios.interceptors.response.use((response) => {
 
   //status 410: token hết hạn, không cần hiển thị toast lỗi nữa vì đã có logic refresh token tự động trong interceptor request
   if (error.response?.status !== 410) {
-    toast.error(errorMessage)
+    toast.error(errorMessage, {
+      theme: 'colored'
+    })
   }
 
   return Promise.reject(error)
