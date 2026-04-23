@@ -4,12 +4,12 @@ import { useInteractionLock } from '~/contexts/InteractionLockProvider'
 
 export default function useConfirm(title, message) {
   const [promise, setPromise] = useState(null)
+  const { lock, unlock } = useInteractionLock()
 
   const confirm = () => {
     lock()
     return new Promise((resolve) => { setPromise({ resolve }) })
   }
-  const { lock, unlock } = useInteractionLock()
 
   const handleClose = (event, reason) => {
     // chặn đóng dialog khi click bên ngoài
