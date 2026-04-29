@@ -58,6 +58,42 @@ authorizeAxios.interceptors.response.use((response) => {
       theme: 'colored'
     })
   }
+  //Case 1: nhận mã 410 từ BE (accessToken expire), gọi api refreshToken để lấy accessToken mới
+  const originalRequests = error.config
+  if (error.response?.status === 410 && !originalRequests._retry) {
+    error.config._retry = true
+
+    if (!refreshTokenPromise) {
+      refreshTokenPromise = refreshTokenApi()
+        .then(data => {
+          return data?.accessToken
+        })
+        .catch((_error) => {
+          //có lỗi thì logout + return để tránh trường hợp gọi logout API 2 lần
+          axiosReduxStore.dispatch(logOutUserApi(false))
+          return Promise.reject(_error)
+        })
+        .finally(() => {
+          //dù có lỗi hay không cũng sẽ luôn gán lại null cho refreshTokenPromise
+          refreshTokenPromise = null
+        })
+    }
+
+    return refreshTokenPromise.then(accessToken => {
+      //Bước 1: đối vs các dự án lưu access token vào local storage hoặc đâu đó
+      //thì viết xử lí ở đây
+      //hiện tại không cần vì đã đưa accessToken vào cookie ( phía BE ) sau khi refreshTokenAPi thành công
+
+      //Bước 2: return axios instance với các originalRequest để gọi lại những cái ban đầu bị lỗi
+      return authorizeAxios(originalRequests)
+    })
+
+  }
+
+  //Case 2: nhận mã lỗi 401 => buộc log out luôn
+  if (error.response?.status === 401) {
+    axiosReduxStore.dispatch(logOutUserApi(false))
+  }
 
   return Promise.reject(error)
 })
