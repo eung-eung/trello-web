@@ -66,3 +66,8 @@ export const verifyUserApi = async (data) => {
   })
   return response.data
 }
+
+export const refreshTokenApi = async () => {
+  const response = await authorizeAxios.get(`${API_ENDPOINT}/v1/users/refresh_token`)
+  return response.data
+}
