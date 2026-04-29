@@ -17,9 +17,8 @@ import { LOADING_KEY } from '~/utils/constants'
 function Board() {
   const dispatch = useDispatch()
   const board = useSelector(selectorCurrentActiveBoard)
-  const loadingBoard = useSelector(state => state.loading)
   const { boardId } = useParams()
-  console.log({loadingBoard})
+
   useEffect( () => {
     //call api
     dispatch(fetchBoardDetailsAPI(boardId))
