@@ -11,7 +11,12 @@ import { store } from '~/redux/store.js'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { injectStore } from './utils/authorizeAxios'
+
 const persistor = persistStore(store)
+
+//Kĩ thuật inject store: khi sử dụng biến redux store ở các file ngoài phạm vi component(ví dụ axios)
+injectStore(store)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

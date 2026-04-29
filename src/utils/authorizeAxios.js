@@ -1,7 +1,15 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { refreshTokenApi } from '~/apis'
 import { startLoading, stopLoading } from '~/redux/loading/loadingSlice'
-import { store } from '~/redux/store'
+import { logOutUserApi } from '~/redux/user/userSlice'
+
+//không dùng được store redux ở file js => inject store rồi import vào main.jsx (nơi chạy đầu tiên)
+//
+let axiosReduxStore
+export const injectStore = (_store) => {
+  axiosReduxStore = _store
+}
 let authorizeAxios = axios.create()
 //thời gian chờ tối đa của 1 request là 10ph
 authorizeAxios.defaults.timeout = 1000 * 60 * 10
