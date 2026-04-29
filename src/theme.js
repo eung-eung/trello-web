@@ -60,7 +60,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           color:
-            theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+            theme.palette.mode === 'dark' ? 'white !important' : theme.palette.primary.main
         })
       }
     },
