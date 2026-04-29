@@ -21,11 +21,11 @@ authorizeAxios.defaults.withCredentials = true
 //interceptor request
 authorizeAxios.interceptors.request.use((config) => {
   const loadingKey = config.meta?.loadingKey
-  store.dispatch(startLoading(loadingKey))
+  axiosReduxStore.dispatch(startLoading(loadingKey))
   return config
 }, (error) => {
   const loadingKey = error.config?.meta?.loadingKey
-  store.dispatch(stopLoading(loadingKey))
+  axiosReduxStore.dispatch(stopLoading(loadingKey))
   let errorMessage = error?.message
   if (error?.response?.data?.message) {
     errorMessage = error.response?.data?.message
@@ -38,14 +38,15 @@ authorizeAxios.interceptors.request.use((config) => {
   }
 })
 
+let refreshTokenPromise = null
 //interceptor response
 authorizeAxios.interceptors.response.use((response) => {
   const loadingKey = response.config?.meta?.loadingKey
-  store.dispatch(stopLoading(loadingKey))
+  axiosReduxStore.dispatch(stopLoading(loadingKey))
   return response
 }, (error) => {
   const loadingKey = error.config?.meta?.loadingKey
-  store.dispatch(stopLoading(loadingKey))
+  axiosReduxStore.dispatch(stopLoading(loadingKey))
   let errorMessage = error?.message
   if (error?.response?.data?.message) {
     errorMessage = error.response?.data?.message
