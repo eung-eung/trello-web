@@ -38,8 +38,6 @@ function BoardBar({ boardBar }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderTop: '1px solid',
-        borderColor: 'primary.light',
         paddingX: 2
       }}
     >
