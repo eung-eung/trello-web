@@ -5,7 +5,9 @@ export const LOADING_KEY = {
   board: 'board',
   auth: {
     login: 'authLogin',
-    register: 'authRegister'
+    register: 'authRegister',
+    updateProfile: 'updateProfile',
+    updatePassword: 'updatePassword'
   },
   card: {
     create: (columnId) => `createCard-${columnId}`,
