@@ -24,7 +24,7 @@ export default function FieldErrorAlert({ error, fieldName }) {
       color: '#ff0000',
       fontWeight: 500
     }}>
-      <ErrorOutlineOutlinedIcon sx={{ color: '#ff0000' }} />
+      <ErrorOutlineOutlinedIcon sx={{ color: '#ff0000 !important' }} />
       {error[fieldName].message}
     </FormHelperText>
   )
