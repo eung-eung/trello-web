@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useState } from 'react'
 import { useInteractionLock } from '~/contexts/InteractionLockProvider'
 
-export default function useConfirm(title, message) {
+export default function useConfirm(title, message, icon) {
   const [promise, setPromise] = useState(null)
   const { lock, unlock } = useInteractionLock()
 
@@ -35,7 +35,8 @@ export default function useConfirm(title, message) {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle sx={{ display:'flex', alignItems:'center', gap: 1 }} id="alert-dialog-title">
+        {icon}
         {title}
       </DialogTitle>
       <DialogContent>
@@ -45,7 +46,7 @@ export default function useConfirm(title, message) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button onClick={handleConfirm} variant='outlined'>
+        <Button onClick={handleConfirm} variant='contained'>
             Ok
         </Button>
       </DialogActions>
