@@ -45,11 +45,12 @@ export const createNewCardAPI = async (newCardData) => {
 }
 
 // API USERS
-export const registerUserApi = async (registerData) => {
+export const registerUserApi = async (registerData, signal) => {
   const response = await authorizeAxios.post(`${API_ENDPOINT}/v1/users/register`, registerData, {
     meta: {
       loadingKey: LOADING_KEY.auth.register
-    }
+    },
+    signal
   })
   toast.success('Account created successfully! Please check your email to verify your account before logging in.', {
     theme: 'colored'
