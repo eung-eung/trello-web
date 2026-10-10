@@ -6,6 +6,14 @@ import { userReducer } from './user/userSlice.js'
 import { combineReducers } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import {
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER
+} from 'redux-persist'
 
 const rootPersistConfig = {
   key: 'root', //key do mình chỉ định
@@ -29,6 +37,18 @@ export const store = configureStore({
     activeBoard: activeBoardReducer,
     loading: loadingReducer,
     user: persistedReducer
-  }
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [
+        FLUSH,
+        REHYDRATE,
+        PAUSE,
+        PERSIST,
+        PURGE,
+        REGISTER
+      ]
+    }
+  })
 })
 
