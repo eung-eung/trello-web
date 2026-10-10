@@ -48,12 +48,13 @@ authorizeAxios.interceptors.response.use((response) => {
   const loadingKey = error.config?.meta?.loadingKey
   axiosReduxStore.dispatch(stopLoading(loadingKey))
   let errorMessage = error?.message
+  //api bị abort vì user chuyển trang, không cần toast lỗi
   if (error?.response?.data?.message) {
     errorMessage = error.response?.data?.message
   }
 
   //status 410: token hết hạn, không cần hiển thị toast lỗi nữa vì đã có logic refresh token tự động trong interceptor request
-  if (error.response?.status !== 410) {
+  if (error.response?.status !== 410 && error.code !== 'ERR_CANCELED') {
     toast.error(errorMessage, {
       theme: 'colored'
     })
@@ -79,6 +80,7 @@ authorizeAxios.interceptors.response.use((response) => {
         })
     }
 
+    // eslint-disable-next-line no-unused-vars
     return refreshTokenPromise.then(accessToken => {
       //Bước 1: đối vs các dự án lưu access token vào local storage hoặc đâu đó
       //thì viết xử lí ở đây
