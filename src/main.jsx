@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from '@mui/material/styles'
 import App from '~/App.jsx'
 import CssBaseline from '@mui/material/CssBaseline'
+import { GlobalStyles } from '@mui/material'
 import theme from '~/theme.js'
 import { InteractionLockProvider } from './contexts/InteractionLockProvider'
 import CustomToastifyContainer from './components/CustomToastifyContainer/CustomToastifyContainer'
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')).render(
         <PersistGate persistor={persistor} loading={null}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <GlobalStyles styles={{ a: { textDecoration: 'none' } }}/>
             <InteractionLockProvider>
               <App />
             </InteractionLockProvider>
