@@ -6,14 +6,26 @@ import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import ButtonLoading from '~/components/Loading/ButtonLoading'
 import { LOADING_KEY } from '~/utils/constants'
 import { registerUserApi } from '~/apis'
+import { useEffect, useRef } from 'react'
 
 export default function RegisterForm() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm()
   const navigate = useNavigate()
+  const abortRef = useRef(null)
 
+  useEffect(() => {
+    return () => {
+      if (abortRef.current) {
+        abortRef.current.abort()
+      }
+    }
+  }, [])
   const submitRegister = (data) => {
+    const controller = new AbortController()
+    abortRef.current = controller
+
     const { email, password } = data
-    registerUserApi({ email, password })
+    registerUserApi({ email, password }, controller.signal)
       .then((user) => {
         navigate(`/login?registeredEmail=${user.email}`)
       })

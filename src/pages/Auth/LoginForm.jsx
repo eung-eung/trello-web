@@ -16,18 +16,30 @@ import InfoIcon from '@mui/icons-material/Info'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { logInUserApi } from '~/redux/user/userSlice'
+import { useEffect, useRef } from 'react'
 
 export default function LoginForm() {
   const navigate = useNavigate()
+  const promiseLoginForm = useRef(null)
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [searchParams] = useSearchParams()
   const verifedEmail = searchParams.get('verifedEmail')
   const registeredEmail = searchParams.get('registeredEmail')
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    return () => {
+      if (promiseLoginForm.current) {
+        promiseLoginForm.current.abort()
+      }
+    }
+  }, [])
+
   const submitLogin = async (data) => {
     const { email, password } = data
-    toast.promise(
-      dispatch(logInUserApi({ email, password })),
+    const _promise = dispatch(logInUserApi({ email, password }))
+    promiseLoginForm.current = _promise
+    toast.promise(_promise,
       {
         pending: 'Logging in...'
       }
