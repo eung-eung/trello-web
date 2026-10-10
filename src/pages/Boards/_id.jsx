@@ -1,17 +1,16 @@
 //Board detail
-import { useEffect } from 'react'
 import Container from '@mui/material/Container'
-import AppBar from '~/components/AppBar/AppBar'
+import { useEffect } from 'react'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
-import { fetchBoardDetailsAPI, updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import SectionLoading from '~/components/Loading/SectionLoading'
+import { fetchBoardDetailsAPI, selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { LOADING_KEY } from '~/utils/constants'
 
 function Board() {
@@ -77,7 +76,6 @@ function Board() {
       maxWidth={false}
       sx={{ height: '100vh', overflow: 'hidden' }}
     >
-      <AppBar />
       <SectionLoading loadingKey={LOADING_KEY.board}>
         <BoardBar boardBar={board} />
         <BoardContent
