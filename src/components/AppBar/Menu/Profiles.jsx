@@ -11,11 +11,18 @@ import Logout from '@mui/icons-material/Logout'
 
 import { useState } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { logOutUserApi, selectCurrentUser } from '~/redux/user/userSlice'
+import useConfirm from '~/hooks/useConfirm'
+import { Link } from 'react-router-dom'
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
+  const dispatch = useDispatch()
+  const currentUser = useSelector(selectCurrentUser)
+  const [confirm, ConfirmDialog] = useConfirm('Are you sure?', 'Your account will be logged out!')
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -23,6 +30,12 @@ function Profiles() {
     setAnchorEl(null)
   }
 
+  const handleLogOut = async () => {
+    const isOk = await confirm()
+    if (isOk) {
+      dispatch(logOutUserApi())
+    }
+  }
   return (
     <Box>
       <Tooltip title="Account settings">
@@ -36,7 +49,7 @@ function Profiles() {
         >
           <Avatar
             sx={{ width: 34, height: 34 }}
-            src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
+            src={currentUser?.avatar}
             alt="avatar"
           />
         </IconButton>
@@ -46,18 +59,18 @@ function Profiles() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        onClick={handleClose}
         slotProps={{
           list: {
             'aria-labelledby': 'basic-button-profiles'
           }
         }}
       >
-        <MenuItem>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
-        </MenuItem>
-        <MenuItem>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> My account
-        </MenuItem>
+        <Link to='/settings/account' style={{ color: 'inherit' }}>
+          <MenuItem>
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem>
           <ListItemIcon>
@@ -71,13 +84,14 @@ function Profiles() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
+      <ConfirmDialog />
     </Box>
   )
 }

@@ -25,7 +25,7 @@ import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDroppable } from '@dnd-kit/core'
-import { PLACEHOLDER_CARD_ID } from '~/utils/constants'
+import { LOADING_KEY, PLACEHOLDER_CARD_ID } from '~/utils/constants'
 import { Bounce, toast } from 'react-toastify'
 import useConfirm from '~/hooks/useConfirm'
 import { useInteractionLock } from '~/contexts/InteractionLockProvider'
@@ -33,6 +33,7 @@ import { createNewCardAPI, deleteColumnAPI } from '~/apis'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
+import ButtonLoading from '~/components/Loading/ButtonLoading'
 
 function Column({ column, isActiveColumn }) {
   const board = useSelector(selectorCurrentActiveBoard)
@@ -345,7 +346,8 @@ function Column({ column, isActiveColumn }) {
                 />
               </Box>
               <Box sx={{ display:'flex', paddingBottom:1 }}>
-                <Button
+                <ButtonLoading
+                  loadingKey={LOADING_KEY.card.create(column._id)}
                   variant='contained'
                   color='success'
                   size='small'
@@ -358,7 +360,7 @@ function Column({ column, isActiveColumn }) {
                   onClick={handleCreateNewCard}
                 >
                   Add card
-                </Button>
+                </ButtonLoading>
                 <Button
                   onClick={toggleOpenNewCardForm}
                   variant='text'>

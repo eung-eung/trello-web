@@ -32,12 +32,27 @@ const theme = createTheme({
         }
       }
     },
-
     cssVariables: {
       colorSchemeSelector: 'class'
     }
   },
   components: {
+    MuiTab: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&.Mui-selected': {
+            color: theme.palette.mode === 'dark' && '#fff'
+          }
+        })
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: ({ theme }) => ({
+          backgroundColor: theme.palette.mode === 'dark' && '#fff'
+        })
+      }
+    },
     MuiCssBaseline: {
       styleOverrides: {
         'html, body': {
@@ -60,17 +75,37 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           color:
-            theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+            theme.palette.mode === 'dark' ? 'white !important' : theme.palette.primary.main
         })
       }
     },
     MuiButton: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          textTransform: 'none',
-          fontWeight: 'bold',
-          color:
-            theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+        root: () => {
+          return ({
+            textTransform: 'none',
+            fontWeight: 'bold',
+            color: '#ffffff'
+          })},
+        outlined: ({ theme }) => ({
+          color: theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+        }),
+        text: ({ theme }) => ({
+          color: theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main
+        }),
+        //variant + color map thành tên
+        containedSubmit: ({ theme }) => ({
+          backgroundColor:
+          theme.palette.mode === 'dark'
+            ? '#5865F2'
+            : theme.palette.primary.main,
+
+          '&:hover': {
+            backgroundColor:
+            theme.palette.mode === 'dark'
+              ? '#4752C4'
+              : '#5d4037'
+          }
         })
       }
     },
@@ -98,6 +133,20 @@ const theme = createTheme({
             fontSize: '0.875rem'
           }
         }
+      }
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          background: theme.palette.mode === 'dark' ? '#424242' : '#fff',
+          '&.Mui-focused input': {
+            borderWidth: '2px !important',
+            borderColor:
+              theme.palette.mode === 'dark'
+                ? 'white !important'
+                : theme.palette.primary.main
+          }
+        })
       }
     },
     MuiOutlinedInput: {

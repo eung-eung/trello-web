@@ -1,25 +1,27 @@
 //Board detail
-import { useEffect } from 'react'
 import Container from '@mui/material/Container'
-import AppBar from '~/components/AppBar/AppBar'
+import { useEffect } from 'react'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
 // import { mockData } from '~/apis/mock-data'
-import { createNewCardAPI, deleteColumnAPI, moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
 import { cloneDeep } from 'lodash'
-import { fetchBoardDetailsAPI, updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
+import SectionLoading from '~/components/Loading/SectionLoading'
+import { fetchBoardDetailsAPI, selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { LOADING_KEY } from '~/utils/constants'
 
 function Board() {
   const dispatch = useDispatch()
   const board = useSelector(selectorCurrentActiveBoard)
+  const { boardId } = useParams()
 
   useEffect( () => {
-    const boardId = '69d5fa000905b348bbce8505' //tạm hardcode, sau này sẽ lấy từ url param
     //call api
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
 
   //hàm xử lí api khi hoàn thành kéo+thả column
   const moveColumns = async (dndOrderedColumns) => {
@@ -74,14 +76,15 @@ function Board() {
       maxWidth={false}
       sx={{ height: '100vh', overflow: 'hidden' }}
     >
-      <AppBar />
-      <BoardBar boardBar={board} />
-      <BoardContent
-        board={board}
-        moveColumns={moveColumns}
-        moveCardsInSameColumn={moveCardsInSameColumn}
-        moveCardsToDifferentColumns={moveCardsToDifferentColumns}
-      />
+      <SectionLoading loadingKey={LOADING_KEY.board}>
+        <BoardBar boardBar={board} />
+        <BoardContent
+          board={board}
+          moveColumns={moveColumns}
+          moveCardsInSameColumn={moveCardsInSameColumn}
+          moveCardsToDifferentColumns={moveCardsToDifferentColumns}
+        />
+      </SectionLoading>
     </Container>
   )
 }

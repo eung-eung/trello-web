@@ -23,6 +23,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CloseIcon from '@mui/icons-material/Close'
 
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
   return (
@@ -37,7 +38,9 @@ function AppBar() {
         paddingX: 2,
         '&::-webkit-scrollbar-track': {
           m: 2
-        }
+        },
+        borderBottom: 1,
+        borderColor: 'divider'
       }}
     >
       <Box
@@ -47,7 +50,9 @@ function AppBar() {
           gap: 2
         }}
       >
-        <AppsIcon />
+        <Link to='/boards'>
+          <AppsIcon style={{ verticalAlign: 'middle'}}/>
+        </Link>
         <Box
           sx={{
             display: 'flex',
@@ -56,15 +61,17 @@ function AppBar() {
           }}
         >
           <SvgIcon component={TrelloIcon} inheritViewBox fontSize="small" />
-          <Typography
-            variant="span"
-            sx={{
-              fontWeight: 600,
-              fontSize: '1.2rem'
-            }}
-          >
+          <Link to='/' style={{ color: 'inherit'}}>
+            <Typography
+              variant="span"
+              sx={{
+                fontWeight: 600,
+                fontSize: '1.2rem'
+              }}
+            >
             Trello
-          </Typography>
+            </Typography>
+          </Link>
 
           <Box sx={{ display: { xs: 'none', lg: 'flex', gap: 1 } }}>
             <Workspaces />
