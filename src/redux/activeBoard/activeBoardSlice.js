@@ -19,6 +19,19 @@ export const fetchBoardDetailsAPI = createAsyncThunk(
     return response.data
   }
 )
+
+export const updateTitleColumnAPI = createAsyncThunk(
+  'activeBoard/updateTitleColumnAPI',
+  async ({ columnId, newTitle }) => {
+    const response = await authorizeAxios
+      .put(
+        `${API_ENDPOINT}/v1/columns/${columnId}`,
+        { title: newTitle }
+      )
+    return response.data
+  }
+)
+
 const activeBoardSlice = createSlice({
   name: 'activeBoard',
   initialState: {
@@ -40,6 +53,14 @@ const activeBoardSlice = createSlice({
 
       //update lại dữ liệu của state currentActiveBoard trong redux store
       state.currentActiveBoard = board
+    }),
+    builder.addCase(updateTitleColumnAPI.fulfilled, (state, action) => {
+      const updatedColumn = action.payload
+      const currentBoard = state.currentActiveBoard
+      const columnToUpdate = currentBoard.columns.find(column => column._id === updatedColumn._id)
+      if (columnToUpdate) {
+        columnToUpdate.title = updatedColumn.title
+      }
     })
   }
 })

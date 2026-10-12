@@ -31,23 +31,27 @@ import useConfirm from '~/hooks/useConfirm'
 import { useInteractionLock } from '~/contexts/InteractionLockProvider'
 import { createNewCardAPI, deleteColumnAPI } from '~/apis'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { selectorCurrentActiveBoard, updateCurrentActiveBoard, updateTitleColumnAPI } from '~/redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
 import ButtonLoading from '~/components/Loading/ButtonLoading'
 
 function Column({ column, isActiveColumn }) {
-  const board = useSelector(selectorCurrentActiveBoard)
-  const dispatch = useDispatch()
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  const dispatch = useDispatch()
+  const board = useSelector(selectorCurrentActiveBoard)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const [newCardTitle, setNewCardTitle] = useState('')
+  const [columnTitle, setcolumnTitle] = useState(column?.title)
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
+  const [openUpdateColumnTitleForm, setOpenUpdateColumnTitleForm] = useState(false)
+
   const [confirm, ConfirmRemoveDialog] = useConfirm(
     'Remove column',
     'Are you sure you want to remove this column? All cards in this column will also be removed.'
   )
   const { locked, lock, unlock } = useInteractionLock()
+
   const toggleOpenNewCardForm = () => {
     setNewCardTitle('')
     setOpenNewCardForm(!openNewCardForm)
@@ -128,6 +132,29 @@ function Column({ column, isActiveColumn }) {
     setAnchorEl(null)
   }
 
+  const handleUpdateColumnTitle = async () => {
+    const title = columnTitle.trim()
+    if (!title) {
+      toast.error('Please input column title', {
+        position: 'bottom-right'
+      })
+      setcolumnTitle(column?.title)
+      return
+    }
+    if (title === column?.title) {
+      setOpenUpdateColumnTitleForm(false)
+      return
+    }
+    try {
+      await dispatch(updateTitleColumnAPI({ columnId: column._id, newTitle: title })).unwrap()
+      setOpenUpdateColumnTitleForm(false)
+    } catch (error) {
+      console.error('Failed to update column title:', error)
+      setcolumnTitle(column?.title)
+      setOpenUpdateColumnTitleForm(false)
+    }
+  }
+
   const handleRemoveColumn = async (columnId) => {
     const ok = await confirm()
     if (!ok) {
@@ -188,20 +215,49 @@ function Column({ column, isActiveColumn }) {
               p: 2
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                color: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'white'
-                    : theme.palette.primary.main
-              }}
-            >
-              {column?.title}
-            </Typography>
+            {openUpdateColumnTitleForm ? (
+              <TextField
+                variant="standard"
+                value={columnTitle}
+                onChange={(e) => setcolumnTitle(e.target.value)}
+                onBlur={handleUpdateColumnTitle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleUpdateColumnTitle()
+                  }
+
+                  if (e.key === 'Escape') {
+                    setcolumnTitle(column.title)
+                    setOpenUpdateColumnTitleForm(false)
+                  }
+                }}
+                autoFocus
+                size="medium"
+                sx={{
+                  '& .MuiInputBase-input': {
+                    fontSize: '1rem',
+                    fontWeight: 'bold'
+                  }
+                }}
+              />
+            ) : (
+              <Typography
+                variant="h6"
+                onClick={() => setOpenUpdateColumnTitleForm(true)}
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  color: (theme) =>
+                    theme.palette.mode === 'dark'
+                      ? 'white'
+                      : theme.palette.primary.main
+                }}
+              >
+                {columnTitle}
+              </Typography>
+            )}
             {/* options  */}
             <Box>
               <Tooltip title="More options">
