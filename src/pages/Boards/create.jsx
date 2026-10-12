@@ -9,6 +9,10 @@ import { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
+import { useDispatch } from 'react-redux'
+import { createBoardAPI, fetchBoardListAPI } from '~/redux/boardList/boardListSlice'
+import ButtonLoading from '~/components/Loading/ButtonLoading'
+import { LOADING_KEY } from '~/utils/constants'
 
 const BOARD_TYPES = {
   PRIVATE: 'private',
@@ -18,10 +22,16 @@ const BOARD_TYPES = {
 export default function SideBarCreateBoardModal() {
   const { register, handleSubmit, formState: { errors }, control, reset } = useForm()
   const [isOpen, setOpen] = useState(false)
-  const handleCreateBoard = (data) => {
-    console.log(data)
+  const dispatch = useDispatch()
 
+  const handleCreateBoard = async (data) => {
+    const result = await dispatch(createBoardAPI(data))
+    if (createBoardAPI.fulfilled.match(result)) {
+      handleCloseModal()
+      await dispatch(fetchBoardListAPI({ page: 1, limit: 10 }))
+    }
   }
+
   const handleOpenModal = () => {
     setOpen(true)
   }
@@ -72,7 +82,7 @@ export default function SideBarCreateBoardModal() {
                   variant='outlined'
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment>
+                      <InputAdornment sx={{ mr: 2 }}>
                         <AbcIcon />
                       </InputAdornment>
                     )
@@ -96,7 +106,7 @@ export default function SideBarCreateBoardModal() {
                   multiline
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment>
+                      <InputAdornment sx={{ mr: 2 }}>
                         <DescriptionOutlinedIcon />
                       </InputAdornment>
                     )
@@ -143,9 +153,9 @@ export default function SideBarCreateBoardModal() {
                 <FieldErrorAlert error={errors} fieldName='type' />
               </Box>
             </Box>
-            <Button type='submit' variant='contained' color='primary' sx={{ mt: 3, alignSelf: 'flex-end' }}>
+            <ButtonLoading loadingKey={LOADING_KEY.board.create} type='submit' variant='contained' color='primary' sx={{ mt: 3, alignSelf: 'flex-end' }}>
               Create
-            </Button>
+            </ButtonLoading>
           </form>
         </Box>
       </Modal>

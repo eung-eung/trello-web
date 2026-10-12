@@ -1,13 +1,18 @@
 //Board list
 
-import { Box, Button, Card, CardActions, CardContent, Divider, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Pagination, PaginationItem, styled, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, Divider, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Pagination, PaginationItem, styled, Tooltip, Typography } from '@mui/material'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import Article from '@mui/icons-material/Article'
 import HomeIcon from '@mui/icons-material/Home'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import randomColor from 'randomcolor'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import SideBarCreateBoardModal from './create'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchBoardListAPI, selectBoardList } from '~/redux/boardList/boardListSlice'
+import { useEffect } from 'react'
+import SectionLoading from '~/components/Loading/SectionLoading'
+import { LOADING_KEY } from '~/utils/constants'
 const sideBarItems = [
   {
     title: 'Boards',
@@ -38,9 +43,21 @@ export const SidebarItem = styled(ListItemButton)(({ theme }) => ({
 ))
 
 function BoardList() {
+  const dispatch = useDispatch()
+  const boards = useSelector(selectBoardList)
   const location = useLocation()
+  const navigate = useNavigate()
   const queryParams = new URLSearchParams(location.search)
   const page = parseInt(queryParams.get('page') || '1', 10)
+
+  useEffect(() => {
+    if ( page < 1 || (page > boards.totalPages && boards.totalPages > 0)) {
+      navigate('/boards?page=1', { replace: true })
+      return
+    }
+
+    dispatch(fetchBoardListAPI({ page, limit: 10 }))
+  }, [dispatch, page, boards.totalPages, navigate])
 
   return (<>
     <Grid container spacing={3}>
@@ -66,53 +83,58 @@ function BoardList() {
       </Grid>
       {/* board list */}
       <Grid size={9}>
-        <Typography variant='h4' fontWeight='bold' textAlign='center' mt={2}>
+        <SectionLoading loadingKey={LOADING_KEY.board.getBoardList}>
+          <Typography variant='h4' fontWeight='bold' textAlign='center' mt={2}>
           Your boards
-        </Typography>
-        <Grid container spacing={2} mt={5} mr={5}>
-          {/* board item */}
-          {Array(15).fill().map((_, index) => (
-            <Grid size={{
-              xs: 12,
-              sm: 6,
-              md: 4
-            }}>
-              <Card variant='elevation'>
-                <Box sx={{
-                  height: 100,
-                  backgroundColor: randomColor()
-                }}/>
-                <CardContent>
-                  <Typography variant='h5' fontWeight='bold'>
-                Board title
-                  </Typography>
-                  <Typography variant='body2' textOverflow={'ellipsis'} whiteSpace='nowrap' overflow='hidden'>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis quia dicta unde ea odit minus illum reiciendis? Suscipit doloremque voluptas et, esse cumque error dignissimos sit aliquam saepe dolore atque!
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: 'flex-end' }}>
-                  <Button size='small'>Go to board  <ArrowRightIcon /></Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+          </Typography>
+          <Grid container spacing={2} mt={5} mr={5}>
+            {/* board item */}
+            {boards.boardList.map((board) => (
+              <Grid size={{
+                xs: 12,
+                sm: 6,
+                md: 4
+              }}>
+                <Card variant='elevation'>
+                  <Box sx={{
+                    height: 100,
+                    backgroundColor: randomColor()
+                  }}/>
+                  <CardContent>
+                    <Tooltip title={board.title} placement='top-start'>
+                      <Typography variant='h5' fontWeight='bold' sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                        {board.title}
+                      </Typography>
+                    </Tooltip>
 
-        </Grid>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 10, pb:5, pt: 2 }}>
-          <Pagination
-            page={page}
-            count={16}
-            variant='outlined'
-            color='secondary'
-            renderItem={(item) => (
-              <PaginationItem
-                component={Link}
-                to={`/boards${item.page === 1 ? '' : `?page=${item.page}`}`}
-                {...item}
-              />
-            )}
-          />
-        </Box>
+                    <Typography variant='body2' textOverflow={'ellipsis'} whiteSpace='nowrap' overflow='hidden'>
+                      {board.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'flex-end' }}>
+                    <Button onClick={() => navigate(`/boards/${board._id}`)} size='small'>Go to board  <ArrowRightIcon /></Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+
+          </Grid>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 10, pb:5, pt: 2 }}>
+            <Pagination
+              page={page}
+              count={boards.totalPages}
+              variant='outlined'
+              color='secondary'
+              renderItem={(item) => (
+                <PaginationItem
+                  component={Link}
+                  to={`/boards${item.page === 1 ? '' : `?page=${item.page}`}`}
+                  {...item}
+                />
+              )}
+            />
+          </Box>
+        </SectionLoading>
       </Grid>
     </Grid>
   </>)

@@ -2,7 +2,13 @@ export const API_ENDPOINT = 'http://localhost:3000'
 export const PLACEHOLDER_CARD_ID = 'PLACEHOLDER'
 
 export const LOADING_KEY = {
-  board: 'board',
+  board: {
+    getBoard: 'getBoard',
+    getBoardList: 'getBoardList',
+    create: 'createBoard',
+    update: (boardId) => `updateBoard-${boardId}`,
+    delete: (boardId) => `deleteBoard-${boardId}`
+  },
   auth: {
     login: 'authLogin',
     register: 'authRegister',

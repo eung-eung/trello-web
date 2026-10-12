@@ -76,7 +76,7 @@ function Board() {
       maxWidth={false}
       sx={{ height: '100vh', overflow: 'hidden' }}
     >
-      <SectionLoading loadingKey={LOADING_KEY.board}>
+      <SectionLoading loadingKey={LOADING_KEY.board.getBoard}>
         <BoardBar boardBar={board} />
         <BoardContent
           board={board}

@@ -13,7 +13,7 @@ export const fetchBoardDetailsAPI = createAsyncThunk(
     const response = await authorizeAxios
       .get(`${API_ENDPOINT}/v1/boards/${boardId}`, {
         meta: {
-          loadingKey: 'board'
+          loadingKey: 'getBoard'
         }
       })
     return response.data

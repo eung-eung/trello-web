@@ -14,6 +14,7 @@ import {
   PURGE,
   REGISTER
 } from 'redux-persist'
+import { boardListReducer } from './boardList/boardListSlice.js'
 
 const rootPersistConfig = {
   key: 'root', //key do mình chỉ định
@@ -36,7 +37,8 @@ export const store = configureStore({
   reducer: {
     activeBoard: activeBoardReducer,
     loading: loadingReducer,
-    user: persistedReducer
+    user: persistedReducer,
+    boards: boardListReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: {
