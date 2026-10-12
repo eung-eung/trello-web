@@ -83,10 +83,10 @@ function BoardList() {
       </Grid>
       {/* board list */}
       <Grid size={9}>
-        <SectionLoading loadingKey={LOADING_KEY.board.getBoardList}>
-          <Typography variant='h4' fontWeight='bold' textAlign='center' mt={2}>
+        <Typography variant='h4' fontWeight='bold' textAlign='center' mt={2}>
           Your boards
-          </Typography>
+        </Typography>
+        <SectionLoading loadingKey={LOADING_KEY.board.getBoardList}>
           <Grid container spacing={2} mt={5} mr={5}>
             {/* board item */}
             {boards.boardList.map((board) => (
