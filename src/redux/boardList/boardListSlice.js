@@ -31,12 +31,12 @@ const boardListSlice = createSlice({
   name: 'boards',
   initialState: {
     boardList: [],
-    totalPages: 0
+    totalBoards: 0
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoardListAPI.fulfilled, (state, action) => {
       state.boardList = action.payload.boardList
-      state.totalPages = action.payload.totalPages
+      state.totalBoards = action.payload.totalBoards
     })
   }
 })
