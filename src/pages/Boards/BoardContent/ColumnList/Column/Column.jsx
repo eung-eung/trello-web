@@ -6,7 +6,6 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 
 import AddCard from '@mui/icons-material/AddCard'
@@ -34,6 +33,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectorCurrentActiveBoard, updateCurrentActiveBoard, updateTitleColumnAPI } from '~/redux/activeBoard/activeBoardSlice'
 import { cloneDeep } from 'lodash'
 import ButtonLoading from '~/components/Loading/ButtonLoading'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 
 function Column({ column, isActiveColumn }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
@@ -44,7 +44,6 @@ function Column({ column, isActiveColumn }) {
   const [newCardTitle, setNewCardTitle] = useState('')
   const [columnTitle, setcolumnTitle] = useState(column?.title)
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
-  const [openUpdateColumnTitleForm, setOpenUpdateColumnTitleForm] = useState(false)
 
   const [confirm, ConfirmRemoveDialog] = useConfirm(
     'Remove column',
@@ -142,16 +141,13 @@ function Column({ column, isActiveColumn }) {
       return
     }
     if (title === column?.title) {
-      setOpenUpdateColumnTitleForm(false)
       return
     }
     try {
       await dispatch(updateTitleColumnAPI({ columnId: column._id, newTitle: title })).unwrap()
-      setOpenUpdateColumnTitleForm(false)
     } catch (error) {
       console.error('Failed to update column title:', error)
       setcolumnTitle(column?.title)
-      setOpenUpdateColumnTitleForm(false)
     }
   }
 
@@ -215,49 +211,12 @@ function Column({ column, isActiveColumn }) {
               p: 2
             }}
           >
-            {openUpdateColumnTitleForm ? (
-              <TextField
-                variant="standard"
-                value={columnTitle}
-                onChange={(e) => setcolumnTitle(e.target.value)}
-                onBlur={handleUpdateColumnTitle}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleUpdateColumnTitle()
-                  }
-
-                  if (e.key === 'Escape') {
-                    setcolumnTitle(column.title)
-                    setOpenUpdateColumnTitleForm(false)
-                  }
-                }}
-                autoFocus
-                size="medium"
-                sx={{
-                  '& .MuiInputBase-input': {
-                    fontSize: '1rem',
-                    fontWeight: 'bold'
-                  }
-                }}
-              />
-            ) : (
-              <Typography
-                variant="h6"
-                onClick={() => setOpenUpdateColumnTitleForm(true)}
-                sx={{
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  color: (theme) =>
-                    theme.palette.mode === 'dark'
-                      ? 'white'
-                      : theme.palette.primary.main
-                }}
-              >
-                {columnTitle}
-              </Typography>
-            )}
+            <ToggleFocusInput
+              handleKeydownEsc={() => setcolumnTitle(column.title)}
+              value={columnTitle}
+              handleUpdate={handleUpdateColumnTitle}
+              handleChange={(e) => setcolumnTitle(e.target.value)}
+            />
             {/* options  */}
             <Box>
               <Tooltip title="More options">
