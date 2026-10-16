@@ -1,0 +1,83 @@
+import { Box, Button, Tooltip, useColorScheme } from '@mui/material'
+import { useState } from 'react'
+import MDEditor from '@uiw/react-md-editor'
+import rehypeSanitize from 'rehype-sanitize'
+
+
+import EditNoteIcon from '@mui/icons-material/EditNote'
+const markdownValueExample = `
+*\`Markdown Content Example:\`*
+
+  **Hello world | Markdown Example**
+  [![](https://avatars.githubusercontent.com/u/93731161?s=48&v=4)](https://avatars.githubusercontent.com/u/93731161?s=48&v=4)
+  \`\`\`javascript
+  import React from "react"
+  import ReactDOM from "react-dom"
+  import MDEditor from '@uiw/react-md-editor'
+  \`\`\`
+`
+
+export default function CardDescriptionMdEditor() {
+  const { mode } = useColorScheme()
+  const [markdownEditMode, setMarkdownEditMode] = useState(false)
+  const [cardDescription, setCardDescription] = useState(markdownValueExample)
+
+  const updateCardDescription = () => {
+    setMarkdownEditMode(false)
+    console.log({ cardDescription })
+  }
+  return (
+    <Box sx={{ mt: -4 }}>
+      { markdownEditMode
+        ? <Box sx={{ mt: 5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box data-color-mode={mode}>
+            <MDEditor
+              value={cardDescription}
+              onChange={setCardDescription}
+              previewOptions={{
+                rehypePlugins: [[rehypeSanitize]]
+              }}
+              height={400}
+              preview='edit' //3 giá trị để set ['edit', 'live', 'preview']
+            />
+          </Box>
+          <Button
+            sx={{ alignSelf: 'flex-end' }}
+            onClick={updateCardDescription}
+            className="interceptor-loading"
+            type="button"
+            variant="contained"
+            size="small"
+            color="info">
+            Save
+          </Button>
+        </Box>: <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Tooltip title='Edit your description'>
+            <Button
+              sx={{ alignSelf: 'flex-end' }}
+              onClick={() => setMarkdownEditMode(true)}
+              type="button"
+              variant="contained"
+              color="info"
+              size="small"
+              startIcon={<EditNoteIcon sx={{ color: 'white !important' }}/>}>
+            Edit
+            </Button>
+          </Tooltip>
+          <Box data-color-mode={mode}>
+            <MDEditor.Markdown
+              source={cardDescription}
+              style={{
+                whiteSpace: 'pre-wrap',
+                padding: cardDescription ? '10px' : '0px',
+                border: cardDescription ? '0.5px solid rgba(0, 0, 0, 0.2)' : 'none',
+                borderRadius: '8px'
+              }}
+            />
+          </Box>
+        </Box>
+      }
+
+    </Box>
+  )
+}

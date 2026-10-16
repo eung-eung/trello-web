@@ -18,18 +18,7 @@ import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import ButtonLoading from '~/components/Loading/ButtonLoading'
 import { LOADING_KEY } from '~/utils/constants'
 import { toast } from 'react-toastify'
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1
-})
+import VisuallyHiddenInput from '~/components/Form/VisuallyHiddenInput'
 
 export default function AccountTab() {
   const dispatch = useDispatch()

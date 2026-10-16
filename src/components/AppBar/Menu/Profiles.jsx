@@ -68,7 +68,7 @@ function Profiles() {
       >
         <Link to='/settings/account' style={{ color: 'inherit' }}>
           <MenuItem>
-            <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }} src={currentUser?.avatar} /> Profile
           </MenuItem>
         </Link>
         <Divider />

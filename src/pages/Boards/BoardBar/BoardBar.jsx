@@ -2,8 +2,6 @@ import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 
 import VpnLockIcon from '@mui/icons-material/VpnLock'
 import DashboardIcon from '@mui/icons-material/Dashboard'
@@ -13,6 +11,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import { capitalizeFirstLetter } from '~/utils/formaters'
+import BoardUserGroup from './BoardUserGroup'
 
 const CHIP_STYLES = {
   color: (theme) =>
@@ -88,48 +87,7 @@ function BoardBar({ boardBar }) {
         <Button variant="outlined" startIcon={<PersonAddIcon />}>
           Invite
         </Button>
-        <AvatarGroup
-          max={4}
-          sx={{
-            '& .MuiAvatar-root': {
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              '&:first-of-type': { bgcolor: '#a4b0be' }
-            }
-          }}
-        >
-          <Tooltip title="eungeung">
-            <Avatar
-              alt="eungeung"
-              src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
-            />
-          </Tooltip>
-          <Tooltip title="eungeung">
-            <Avatar
-              alt="eungeung"
-              src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
-            />
-          </Tooltip>
-          <Tooltip title="eungeung">
-            <Avatar
-              alt="eungeung"
-              src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
-            />
-          </Tooltip>
-          <Tooltip title="eungeung">
-            <Avatar
-              alt="eungeung"
-              src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
-            />
-          </Tooltip>
-          <Tooltip title="eungeung">
-            <Avatar
-              alt="eungeung"
-              src="https://avatars.githubusercontent.com/u/93731161?s=48&v=4"
-            />
-          </Tooltip>
-        </AvatarGroup>
+        <BoardUserGroup />
       </Box>
     </Box>
   )

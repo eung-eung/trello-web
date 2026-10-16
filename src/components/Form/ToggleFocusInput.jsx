@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import { useRef, useState } from 'react'
 
-export default function ToggleFocusInput({ value, handleChange, handleUpdate, handleKeydownEsc }) {
+export default function ToggleFocusInput({ value, handleChange, handleUpdate, handleKeydownEsc, ...props }) {
   const [isEditing, setIsEditing] = useState(false)
   const inputRef = useRef(null)
   const skipBlurUpdate = useRef(false)
@@ -45,8 +45,8 @@ export default function ToggleFocusInput({ value, handleChange, handleUpdate, ha
       size="medium"
       sx={(theme) => ({
         '& .MuiInputBase-input': {
-          fontSize: '1rem',
-          fontWeight: 'bold',
+          fontSize: props?.fontSize || '1rem',
+          fontWeight: '600',
           cursor: isEditing ? 'text' : 'pointer'
         },
         '& .MuiInput-underline:before': {

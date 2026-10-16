@@ -12,6 +12,7 @@ import { moveCardToDifferentColumnAPI, updateBoardDetailsAPI, updateColumnDetail
 import SectionLoading from '~/components/Loading/SectionLoading'
 import { fetchBoardDetailsAPI, selectorCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { LOADING_KEY } from '~/utils/constants'
+import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
 
 function Board() {
   const dispatch = useDispatch()
@@ -84,6 +85,7 @@ function Board() {
           moveCardsInSameColumn={moveCardsInSameColumn}
           moveCardsToDifferentColumns={moveCardsToDifferentColumns}
         />
+        <ActiveCard />
       </SectionLoading>
     </Container>
   )

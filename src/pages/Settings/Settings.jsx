@@ -39,8 +39,9 @@ export default function Settings() {
     <Container maxWidth={false} disableGutters>
       <Box sx={{ borderBottom: 1, borderColor:'divider' }}>
         <Tabs value={getDefaultTab()} onChange={handleChange}>
-          {Object.values(TABS).map(tab => (
+          {Object.values(TABS).map((tab, index) => (
             <Tab
+              key={index}
               label={tab.value}
               value={tab.value}
               icon={<tab.icon />}
